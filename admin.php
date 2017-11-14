@@ -5,10 +5,11 @@ require("bdd_pdo.php");
 
 
 $form_create_user = new Form(array(
-	'username', 'email', 'password', 'password_confirmation'));
+	'username', 'email', 'password', 'password_confirmation', 'admin'));
 
 if ($_POST)
 {
+	var_dump($_POST);
 	$subError = $form_create_user->checkErrors($_POST);
 
 	if (count($subError) == 0)
@@ -16,10 +17,12 @@ if ($_POST)
 		$username = $_POST["username"];
 		$password = $_POST["password"];
 		$email = $_POST["email"];
-		$newuser = new User($bdd, $username, $password, $email);
+		isset($_POST["admin"])? $admin = 1 : $admin = 0;
+		$newuser = new User($bdd, $username, $password, $email, $admin);
 		$newuser->subscription();
 		$_SESSION["message"] = "Your account has been created";
-		header("Location: index.php", true, 301);
+		unset($_POST);
+		//header("Location: index.php", true, 301);
 	}
 }
 
@@ -39,18 +42,19 @@ $request_all_users = $bdd->query($sql);
 <div class="create-user">
 	<form action="admin.php" method="post">
 		<?php 
-			echo $form_create_user->input_text('username', $_POST);
+			echo $form_create_user->input_text('username', $_POST['username']);
 			if (isset($subError['username']))
 				echo $subError['username'];
-			echo $form_create_user->input_text('email', $_POST);
+			echo $form_create_user->input_text('email', $_POST['email']);
 			if (isset($subError['email']))
 				echo $subError['email'];
-			echo $form_create_user->input_password('password', $_POST);
-			echo $form_create_user->input_password('password_confirmation', $_POST);
+			echo $form_create_user->input_password('password');
+			echo $form_create_user->input_password('password_confirmation');
 			if (isset($subError['password']))
 				echo $subError['password'];
 			if (isset($subError['password_confirmation']))
 				echo $subError['password_confirmation'];
+			echo $form_create_user->input_checkbox('admin', isset($_POST['admin']));
 			echo $form_create_user->submit('Envoyer');
 		?>
 	</form>
@@ -73,8 +77,8 @@ $request_all_users = $bdd->query($sql);
 			<td><?php echo $data["id"]; ?></td>
 			<td><?php echo $data["username"]; ?></td>
 			<td><?php echo $data["email"]; ?></td>
-			<td><a href="modify_user.php?id=$data[/'id/']">X</a></td>
-			<td><a href="delete_user.php">X</a></td>
+			<td><a href="modify_user.php?id=<?php echo $data["id"]; ?>">X</a></td>
+			<td><a href="delete_user.php?id=<?php echo $data["id"]; ?>">X</a></td>
 		</tr>
 
 		<?php

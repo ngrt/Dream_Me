@@ -18,25 +18,38 @@ class Form
 		
 		return $this->surround('
 			<label for="'. $name .'">'.$field.'</label>
-			<input type="text" id="' . $name . '" name="' . $name . '" value="' . $this->getValue($name, $arrayPOST) . '">
-			');
+			<input type="text" id="' . $name . '" name="' . $name . '" value="' . $arrayPOST . '">
+		');
 	}
-	public function input_password($name, $arrayPOST){
+
+	public function input_password($name){
 		$field = ucfirst($name);
 		
 		return $this->surround('
 			<label for="'. $name .'">'.$field.'</label>
-			<input type="password" id="' . $name . '" name="' . $name . '" value="' . $this->getValue($name, $arrayPOST) . '">
-			');
+			<input type="password" id="' . $name . '" name="' . $name . '">
+		');
 	}
 
 	public function input_checkbox($name, $arrayPOST){
 		$field = ucfirst($name);
-		
-		return $this->surround('
-			<label for="'. $name .'">'.$field.'</label>
-			<input type="checkbox" id="' . $name . '" name="' . $name . '">
+
+		if ($arrayPOST)
+		{
+			return $this->surround('
+				<label for="'. $name .'">'.$field.'</label>
+				<input type="checkbox" id="' . $name . '" name="' . $name . '"checked>
 			');
+		}
+		else
+		{
+			return $this->surround('
+				<label for="'. $name .'">'.$field.'</label>
+				<input type="checkbox" id="' . $name . '" name="' . $name . '">
+			');
+		}
+
+
 	}
 
 	private function getValue($index, $arrayPOST)

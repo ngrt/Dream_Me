@@ -36,6 +36,11 @@ class User
 		return $this->admin;
 	}
 
+	public function is_admin()
+	{
+		return $this->admin;
+	}
+
 	public function checkExist()
 	{
 		$errors = [];
