@@ -142,7 +142,7 @@ class User
 
 	public function checkPassword($password)
 	{
-		$sql = 'SELECT password FROM users WHERE email=' . $this->email;
+		$sql = 'SELECT password FROM users WHERE email="' . $this->email . '"';
 		$request = $this->bdd->query($sql);
 
 		$data = $request->fetch();
