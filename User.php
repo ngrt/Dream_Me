@@ -72,7 +72,7 @@ class User
 
 	public function subscription()
 	{
-		if (count($this->checkExist($this->bdd, $this->username, $this->email)) == 0)
+		if (count($this->checkExist()) == 0)
 		{
 			$sql = 'INSERT INTO users (username, password, email, admin) VALUES (:username, :password, :email, :admin)';
 			$result = $this->bdd->prepare($sql);

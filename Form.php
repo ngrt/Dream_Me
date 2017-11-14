@@ -38,15 +38,14 @@ class Form
 	}
 
 // Form checking
-	protected function checkErrors($arrayPOST)
+	public function checkErrors($arrayPOST)
 	{
-		$errors = array();
+		$errors = [];
 		$fieldname = array("username", "password", "password_confirmation", "email");
 
 		foreach ($fieldname as $value) {
 			if (!isset($arrayPOST[$value]))
 			{
-				array_push($errors, $value);
 				$errors[$value] = "Field required";
 			}
 		}
@@ -54,30 +53,27 @@ class Form
 	// Check username length 
 		if (strlen($arrayPOST["username"]) < 3 || strlen($arrayPOST["username"]) > 10)
 		{
-			array_push($errors, "username");
 			$errors["username"] = "The username must be between 3 and 10 characters";
 		}
 
 	// Check email format
-		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) 
+		if (!filter_var($arrayPOST["email"], FILTER_VALIDATE_EMAIL)) 
 		{
-    		array_push($errors, "email");
-			$errors["email"] = "This email is not valid";
+
+			$errors["email"] = "This email is not valid\n";
     	}
 
 	// Password checks
-		if (strlen($_POST["password"]) > 2 && strlen($_POST["password"]) < 11)
+		if (strlen($arrayPOST["password"]) > 2 && strlen($arrayPOST["password"]) < 11)
 		{
-			if ($_POST["password_confirmation"] != $_POST["password"])
+			if ($arrayPOST["password_confirmation"] != $arrayPOST["password"])
 			{
-				array_push($errors, "password_confirmation");
 				$errors["password_confirmation"] = "Invalid password or password confirmation";	
 			}
 		}
 		else
 		{
-			array_push($errors, "password_length");
-			$errors["password_length"] = "The password must be between 3 and 10 characters";
+			$errors["password"] = "The password must be between 3 and 10 characters";
 		}
 	return $errors;
 	}
