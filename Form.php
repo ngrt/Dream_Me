@@ -30,6 +30,15 @@ class Form
 			');
 	}
 
+	public function input_checkbox($name, $arrayPOST){
+		$field = ucfirst($name);
+		
+		return $this->surround('
+			<label for="'. $name .'">'.$field.'</label>
+			<input type="checkbox" id="' . $name . '" name="' . $name . '">
+			');
+	}
+
 	private function getValue($index, $arrayPOST)
 	{
 		return isset($arrayPOST[$index]) ? $arrayPOST[$index] : null;
