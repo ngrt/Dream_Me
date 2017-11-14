@@ -6,10 +6,10 @@ require "bdd_pdo.php";
 		$_SESSION["username"] = $_COOKIE["username"];
 	}
 	if (!isset($_SESSION["username"]) || !isset($_COOKIE["username"]))
-		{
-			header("Location:http://localhost/pool_php_d10/ex_05/index.php");
-			exit;
-		}
+	{
+		header("Location: ./index.php");
+		exit;
+	}
 	if (isset($_SESSION["username"]))
 	{
 		$username = $_SESSION["username"];
@@ -26,11 +26,4 @@ require "bdd_pdo.php";
 			";
 
 	}
-	
-	
-
-
-
-	
-
 ?>
