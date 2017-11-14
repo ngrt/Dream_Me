@@ -37,9 +37,7 @@ class User
         {
         	$errors["email"] = "This email already exists";
         }
-
         return $errors;
-
 	}
 
 	public function subscription($bdd, $username, $password, $email, $admin = 0)
@@ -72,14 +70,44 @@ class User
 
 	}
 
-	public function update()
+	public function update($bdd, $type, $new, $old)
 	{
 
+		$sql = 'UPDATE users SET '. $type . '= :new WHERE ' . $type .  '= :old';
+		$result = $bdd->prepare($sql);
+
+		$data = array(
+            'new' => $new,
+            'old' => $old,
+            );
+
+		if ($result->execute($data))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}	
 	}
 
-	public function delete()
+	public function delete($bdd, $type, $value)
 	{
+		$sql = 'DELETE FROM users WHERE ' . $type . '= :value';
+		$result = $bdd->prepare($sql);
 
+		$data = array(
+            'value' => $value
+            );
+
+		if ($result->execute($data))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}	
 	}
 
 
