@@ -7,17 +7,20 @@ require "bdd_pdo.php";
 	}
 	if (!isset($_SESSION["username"]) || !isset($_COOKIE["username"]))
 	{
-		header("Location: ./index.php");
+		header("Location: ./index.php", true, 301);
 		exit;
 	}
 	if (isset($_SESSION["username"]))
 	{
+		var_dump($_COOKIE);
+
 		$username = $_SESSION["username"];
 
-		$req = $bdd->query('SELECT email FROM users WHERE username = "'.$username.'"');
+		$req = $bdd->query('SELECT email FROM users WHERE username = "' . $username . '"');
 		$data = $req->fetch();
+		//var_dump($data);
 		$email = $data["email"];
-		echo "
+		$html = "
 			<p>My account</p>
 			<p>Username : $username</p>
 			<p>Email : $email</p>
@@ -27,3 +30,13 @@ require "bdd_pdo.php";
 
 	}
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Account - Dream.me</title>
+</head>
+<body>
+	<?php echo $html; ?>
+</body>
+</html>

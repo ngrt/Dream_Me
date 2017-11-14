@@ -7,12 +7,16 @@ require "bdd_pdo.php";
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Dream Homepage</title>
+	<title>Home - Dream.me</title>
 </head>
 <body>
 	<?php 
 	if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
 	{
+		if (!isset($_SESSION["username"]))
+		{
+			$_SESSION["username"] = $_COOKIE["username"];
+		}
 		echo "<p><a href='./logout.php'>Log out</a></p>";
 		echo "<p><a href='./my_account.php'>My account</a></p>";
 		$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
@@ -22,7 +26,7 @@ require "bdd_pdo.php";
 
 		if ($res["admin"] == '1')
 		{
-			echo "<p><a href='./admin.php'>Settings</a></p>";
+			echo "<p><a href='./admin.php'>Settings [Admin mode]</a></p>";
 		}
 
 	}

@@ -17,7 +17,7 @@ session_start();
 	{
 		$username = $_SESSION["username"];
 
-		$req = $bdd->query('SELECT * FROM users WHERE username = "'.$username.'"');
+		$req = $bdd->query('SELECT * FROM users WHERE username = "' . $username . '"');
 		$data = $req->fetch();
 		$password = $data["password"];
 		$email = $data["email"];
@@ -27,9 +27,9 @@ session_start();
 	}
 
 	$modify_email = new Form(array(
-		'new_email'));
+		'new_email', 'password'));
 	$modify_password = new Form(array(
-		'new_password'));
+		'new_password', 'new_password_confirmation', 'password'));
 
 ?>
 <!DOCTYPE html>
@@ -39,17 +39,15 @@ session_start();
 	<title>Modify account - Dream.me</title>
 </head>
 <body>
-	<form action="modify_account.php">
+	<form action="modify_account.php" method='post'>
 		<?php 
-			echo "Email : ".$email;
-			echo $modify_email->input_text('new_email', $_POST);
+			echo $modify_email->input_text('new_email', isset($_POST['new_email']) ? $_POST['new_email'] : $email);
 
 			$sql = 'SELECT EXISTS (SELECT * FROM users WHERE email = :email) AS email_exists';
 			$result = $bdd->prepare($sql);
 			$req = $result->fetch();
 			
-			echo $modify_email->input_password('password', $_POST);
-
+			echo $modify_email->input_password('password');
 			if (isset($_POST["password"]) && isset($_POST['new_email']))
 			{
 				if ($req["email_exists"] == false)
@@ -57,8 +55,12 @@ session_start();
 					$checkpass = $user->checkPassword($_POST["password"]);
 					if ($checkpass == true)
 					{
-						$user->update('email', $_POST['new_email'], $email); //$email défini dans $user plus haut
+						$user->update('email', $_POST['new_email'], $user->get_email()); //$email défini dans $user plus haut
 						echo "Email successfully modified";
+					}
+					else
+					{
+						echo "Wrong password";
 					}
 				}
 			}
@@ -68,13 +70,13 @@ session_start();
 
 	</form>
 	
-	<form action="modify_account.php">
+	<form action="modify_account.php" method='post'>
 		
 		<?php 
+			echo $modify_password->input_password('new_password');
+			echo $modify_password->input_password('new_password_confirmation');
+			echo $modify_password->input_password('password');
 
-			echo $modify_password->input_password('new_password', $_POST);
-			echo $modify_password->input_password('new_password_confirmation', $_POST);
-			echo $modify_password->input_password('password', $_POST);
 			if (isset($_POST['new_password_confirmation']) && isset($_POST['new_password']))
 			{
 				if ($_POST['new_password_confirmation'] == $_POST['new_password'])

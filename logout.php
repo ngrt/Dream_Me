@@ -3,7 +3,7 @@ session_start();
 unset($_SESSION);
 session_destroy();
 session_write_close();
-header('Location: ./index.php');
-setcookie("username", $name, 1);
+setcookie("username", "", 1);
+header('Location: index.php', true, 301);
 exit;
 ?>
