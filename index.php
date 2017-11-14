@@ -17,7 +17,19 @@ require "bdd_pdo.php";
 		echo "<p><a href='./my_account.php'>My account</a></p>";
 	}
 	else 
+	{
 		echo "<p><a href='./login.php'>Log in - Sign in</a></p>";
+	}
+
+	$isadmin = $bdd->prepare("SELECT is_admin FROM users WHERE name = :name");
+	$isadmin->execute(array(
+		'name' => $_SESSION["name"]));
+	$res = $isadmin->fetch();
+
+	if ($res["is_admin"] == '1')
+	{
+		echo "<p><a href='./admin.php'>Settings</a></p>";
+	}
 	?>
 
 

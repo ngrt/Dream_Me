@@ -73,7 +73,7 @@ $request_all_users = $bdd->query($sql);
 			<td><?php echo $data["id"]; ?></td>
 			<td><?php echo $data["username"]; ?></td>
 			<td><?php echo $data["email"]; ?></td>
-			<td><a href="modify_user.php">X</a></td>
+			<td><a href="modify_user.php?id=$data[/'id/']">X</a></td>
 			<td><a href="delete_user.php">X</a></td>
 		</tr>
 
