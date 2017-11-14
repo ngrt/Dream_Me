@@ -11,7 +11,7 @@ class User
 		$errors = [];
 
 		// check username
-		$sql = 'SELECT EXISTS (SELECT * FROM users WHERE name = :username) AS username_exists';
+		$sql = 'SELECT EXISTS (SELECT * FROM users WHERE username = :username) AS username_exists';
 		$result = $bdd->prepare($sql);
 		$data = array('username' => $username);
 
@@ -25,7 +25,7 @@ class User
         }
 
 		// check email
-		$sql = 'SELECT EXISTS (SELECT * FROM users WHERE name = :email) AS email_exists';
+		$sql = 'SELECT EXISTS (SELECT * FROM users WHERE email = :email) AS email_exists';
 		$result = $bdd->prepare($sql);
 		$data = array('email' => $email);
 
@@ -58,11 +58,11 @@ class User
 
 			if ($result->execute($data))
 			{
-				return true:
+				return true;
 			}
 			else
 			{
-				return false
+				return false;
 			}	
 		}
 		else
