@@ -1,3 +1,6 @@
+<?php
+	session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,38 +26,29 @@ if ($_POST)
 		$username = $_POST["username"];
 		$password = $_POST["password"];
 		$email = $_POST["email"];
-
 		$newuser = new User($bdd, $username, $password, $email);
-		
 		$newuser->subscription();
+		header("Location: index.php", true, 301);
+		$_SESSION["message"] = "Your account has been created";
 	}
 }
 
 ?>
 <form action="subscription.php" method="post">
 	<?php 
-		echo $subscform->input_text('username');
+		echo $subscform->input_text('username', $_POST);
 		if (isset($subError['username']))
 			echo $subError['username'];
-		echo $subscform->input_text('email');
+		echo $subscform->input_text('email', $_POST);
 		if (isset($subError['email']))
 			echo $subError['email'];
-		echo $subscform->input_password('password');
-		echo $subscform->input_password('password_confirmation');
+		echo $subscform->input_password('password', $_POST);
+		echo $subscform->input_password('password_confirmation', $_POST);
 		if (isset($subError['password']))
 			echo $subError['password'];
 		if (isset($subError['password_confirmation']))
 			echo $subError['password_confirmation'];
 		echo $subscform->submit('Envoyer');
-
-		
-		// $user1 = new User();
-		// $username = "Catherine";
-		// $password = "root";
-		// $email = "catherine@dream.me";
-		// $admin = 1;
-		// var_dump($user1->checkExist($bdd, $username, $email));
-		// $user1->subscription($bdd, $username, $password, $email, $admin);
 	?>
 </form>
 

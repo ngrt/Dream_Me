@@ -13,28 +13,34 @@ class Form
 		return "<{$this->surround}>{$html}</{$this->surround}>";
 	}
 // Different types of input
-	public function input_text($name){
+	public function input_text($name, $arrayPOST){
 		$field = ucfirst($name);
 		
 		return $this->surround('
 			<label for="'. $name .'">'.$field.'</label>
-			<input type="text" id="' . $name . '" name="' . $name . '">
+			<input type="text" id="' . $name . '" name="' . $name . '" value="' . $this->getValue($name, $arrayPOST) . '">
 			');
 	}
-	public function input_password($name){
+	public function input_password($name, $arrayPOST){
 		$field = ucfirst($name);
 		
 		return $this->surround('
 			<label for="'. $name .'">'.$field.'</label>
-			<input type="password" id="' . $name . '" name="' . $name . '">
+			<input type="password" id="' . $name . '" name="' . $name . '" value="' . $this->getValue($name, $arrayPOST) . '">
 			');
+	}
+
+	private function getValue($index, $arrayPOST)
+	{
+		return isset($arrayPOST[$index]) ? $arrayPOST[$index] : null;
 	}
 
 
 // Submit function with parameter string $type (ex: Submit, Register, etc...)
 	public function submit($type){
 		return $this->surround('
-			<input type="submit" value="'.$type.'">');
+			<input type="submit" value="'.$type.'">
+			');
 	}
 
 // Form checking
