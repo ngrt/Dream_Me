@@ -2,7 +2,7 @@
 
 session_start();
 include_once("User.php");
-include_once("Form.php");
+include_once("Form_User.php");
 require("bdd_pdo.php");
 
 if (isset($_GET["id"]))
@@ -16,7 +16,7 @@ if (isset($_GET["id"]))
 
 	$user = new User($bdd, $data["username"], $data["password"], $data["email"], $data["admin"]);
 
-	$form_modify_user = new Form(array('username', 'email', 'password', 'password_confirmation', 'admin'));
+	$form_modify_user = new Form_User(array('username', 'email', 'password', 'password_confirmation', 'admin'));
 
 	if ($_POST)
 	{
