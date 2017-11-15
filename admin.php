@@ -4,6 +4,7 @@ include_once("User.php");
 include_once("Product.php");
 include_once("Form.php");
 include_once("Form_Product.php");
+include_once("Form_Category.php");
 require("bdd_pdo.php");
 
 if (isset($_COOKIE["username"]))
@@ -20,6 +21,8 @@ $form_create_user = new Form(array('username', 'email', 'password', 'password_co
 
 $form_create_product = new Form_Product(array('name', 'price', 'category_id'));
 
+$form_create_category = new Form_Category(array('name', 'price_id'));
+
 $sql = 'SELECT * FROM users WHERE username != "' . $_SESSION["username"] . '"';
 
 $request_all_users = $bdd->query($sql);
@@ -27,6 +30,12 @@ $request_all_users = $bdd->query($sql);
 $sql = 'SELECT * FROM products';
 
 $request_all_products = $bdd->query($sql);
+
+$sql = 'SELECT * FROM categories';
+
+$request_all_categories = $bdd->query($sql);
+
+$id_categories = [];
 
 ?>
 
@@ -65,7 +74,7 @@ $request_all_products = $bdd->query($sql);
 				if (isset($_SESSION['errors']['password_confirmation']))
 					echo $_SESSION['errors']['password_confirmation'];
 				echo $form_create_user->input_checkbox('admin', isset($_POST['admin']));
-				echo $form_create_user->submit('Envoyer');
+				echo $form_create_user->submit('Create a user');
 			?>
 		</form>
 	</div>
@@ -132,7 +141,7 @@ $request_all_products = $bdd->query($sql);
 				echo $form_create_product->input_text('category_id', isset($_POST['category_id']) ? $_POST['category_id'] : null);
 				if (isset($_SESSION['errors']['category_id']))
 					echo $_SESSION['errors']['category_id'];
-				echo $form_create_product->submit('Envoyer');
+				echo $form_create_product->submit('Create a product');
 			?>
 		</form>
 	</div>
@@ -169,6 +178,57 @@ $request_all_products = $bdd->query($sql);
 				}
 			?>
 		</table>
+	</div>
+</div>
+
+<!--<select name="menu_destination"> 
+<optgroup label="le site">
+     <option value="http://www.monsite.net/accueil.html">Accueil</option> 
+     <option value="http://www.monsite.net/apropos.html">Qui sommes-nous ?</option> 
+     <option value="http://www.monsite.net/contact.html">Nous contacter</option> 
+     <option value="http://www.monsite.net/plan.html">Plan du site</option> 
+</optgroup>
+<optgroup label="rubriques">
+     <option value="url_1">Catégorie 1</option> 
+     <option value="url_2">Catégorie 2</option> 
+     <option value="url_3">Catégorie 3</option> 
+</optgroup>
+</select>
+-->
+
+<div class="categories-management">
+	<h1>Category Management</h1>
+	<h2>Add a category</h2>
+	<?php 
+		echo isset($_SESSION["message-creation-cat"]) ? $_SESSION["message-creation-cat"] : null; 
+		unset($_SESSION["message-creation-cat"])
+	?>
+	<div class = "create-category">
+		<form method="post" action="create_category.php">
+
+			<?php
+				echo $form_create_category->input_text('name', isset($_POST['name']) ? $_POST['name'] : null);
+				if (isset($_SESSION['errors']['namec']))
+					echo $_SESSION['errors']['namec'];
+			?>
+				<label>Parent category</label>
+				<select name="parent_id"> 
+					<option value="">No parent category</option>
+			<?php
+					while ($data = $request_all_categories->fetch()) 
+					{
+			?>
+						<option value=<?php echo $data["id"]; ?>><?php echo $data["name"] ?></option>
+			<?php
+					}
+			?>
+				</select>
+			<?php
+				//echo $form_create_category->input_text('parent_id', isset($_POST['parent_id']) ? $_POST['parent_id'] : null);
+				echo $form_create_category->submit('Add a category')
+			?>
+
+		</form>
 	</div>
 </div>
 

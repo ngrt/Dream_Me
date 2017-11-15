@@ -8,13 +8,13 @@
 	<title>Dream subscribe</title>
 </head>
 <body>
-	<?php 
-	include_once("User.php");
-	include_once("Form.php");
-	require("bdd_pdo.php");
+<?php 
+include_once("User.php");
+include_once("Form_User.php");
+require("bdd_pdo.php");
 
 
-$subscform = new Form(array(
+$subscform = new Form_User(array(
 	'username', 'email', 'password', 'password_confirmation'));
 
 if ($_POST)
