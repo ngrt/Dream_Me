@@ -14,6 +14,16 @@ include_once("Form_User.php");
 require("bdd_pdo.php");
 
 
+	if (isset($_COOKIE["username"]))
+	{
+		$_SESSION["username"] = $_COOKIE["username"];
+	}
+	if (isset($_SESSION["username"]) && isset($_COOKIE["username"]))
+	{
+		header("Location: ./index.php");
+		exit;
+	}
+
 $subscform = new Form_User(array(
 	'username', 'email', 'password', 'password_confirmation'));
 

@@ -62,14 +62,21 @@ class Form_User extends Form
 		}
 		else
 		{
-			$errors["password"] = "The password must be between 3 and 10 characters";
+			$errors["password_syntax"] = "The password must be between 3 and 10 characters";
 		}
 	return $errors;
 	}
 
 	public function checkMailUpdateErrors($arrayPOST)
 	{
+		$errors = [];
 
+		if (!filter_var($arrayPOST["new_email"], FILTER_VALIDATE_EMAIL)) 
+		{
+			$errors["new_email"] = "This email is not valid\n";
+    	}
+
+		return $errors;
 	}
 }
 ?>

@@ -27,46 +27,66 @@ session_start();
 		$user = new User($bdd, $username, $password, $email, $admin);
 	}
 
-if (isset($_GET["id"]))
-{
-	$id = $_GET["id"];
+	$modify_email = new Form_User(array(
+				'new_email', 'password'));
 
 	$modify_password = new Form_User(array(
 				'new_password', 'new_password_confirmation', 'password'));
 
 
+if (isset($_GET["id"]))
+{
+	$id = $_GET["id"];
 
-	// if (isset($_POST["password"]) && isset($_POST['new_email']))
-	// {
-	// 	//var_dump($_POST);
-	// 	$subError = $modify_email->checkErrors($_POST);
+	if (isset($_POST["password"]) && isset($_POST['new_email']))
+	{
+		//var_dump($_POST);
 		
+		$sql = "SELECT EXISTS (SELECT * FROM users WHERE email = :email) AS email_exists";
+		$result = $bdd->prepare($sql);
+        $result->execute(array('email' => $_POST['new_email']));
 
-	// 	if (count($subError) == 0)
-	// 	{	
-	// 		$user->set_email($_POST["email"]);
-	// 		$user->update($id);
-	// 		$_SESSION["message-update-mail-user"] = "Your email has been updated";
-	// 		exit();
-	// 	}
-	// }
+        $req = $result->fetch();
 
-	if (isset($_POST['new_password_confirmation']) && isset($_POST['new_password']) && isset($_POST['password']))
+        if ($req["email_exists"])
+        {
+        	echo "This email is already used";
+        }
+
+		$mailErrors = $modify_email->checkMailUpdateErrors($_POST);
+		if (count($mailErrors) == 0)
+		{	
+			$checkpass = $user->checkPassword($_POST["password"]);
+			if ($checkpass == true)
+			{
+				$user->set_email($_POST['new_email']);
+				$user->update($id);
+				echo "Your e-mail has been updated";
+			}
+			else
+			{
+				$_SESSION["mail-wrong-password"] = "Wrong password";
+			}
+		}
+	}
+//var_dump($_POST);
+	if (isset($_POST['new_password_confirmation']) && isset($_POST['new_password']) && isset($_POST['old_password']))
 	{
 
 		$passErrors = $modify_password->checkPassUpdateErrors($_POST);
 
 		if (count($passErrors) == 0)
 		{	
-				$checkpass = $user->checkPassword($_POST["password"]);
+				$checkpass = $user->checkPassword($_POST["old_password"]);
 				if ($checkpass == true)
 				{
-					$user->set_password($_POST["password"]);
+					var_dump($user);
+					$user->set_password($_POST["new_password"]);
 					$user->update($id);
 					echo "Your password has been updated";
 				}
 				else
-					$_SESSION["message-wrong-password"] = "Wrong password";
+					$_SESSION["pass-wrong-password"] = "Wrong password";
 		}
 	}
 }
@@ -80,72 +100,42 @@ if (isset($_GET["id"]))
 </head>
 <body>
 
-	<!-- <form action="modify_account.php" method='post'>
-		<?php 
-			$modify_email = new Form_User(array(
-				'new_email', 'password'));
-	
-
+	<form action=<?php echo "modify_account.php?id=" . $id; ?> method='post'>
+		<?php 	
 			echo $modify_email->input_text('new_email', isset($_POST['new_email']) ? $_POST['new_email'] : $email);
-
-			$sql = 'SELECT EXISTS (SELECT * FROM users WHERE email = :email) AS email_exists';
-			$result = $bdd->prepare($sql);
-			$req = $result->fetch();
-			
+			if (isset($mailErrors['new_email']))
+					echo $mailErrors['new_email'];
 			echo $modify_email->input_password('password');
-			if (isset($_POST["password"]) && isset($_POST['new_email']))
+			if (isset($_SESSION["mail-wrong-password"]))
 			{
-				if ($req["email_exists"] == false)
-				{
-					$checkpass = $user->checkPassword($_POST["password"]);
-					if ($checkpass == true)
-					{
-						$user->set_email($_POST['new_email']);
-						$user->update($id);
-						$user->update('email', $_POST['new_email'], $user->get_email()); //$email défini dans $user plus haut
-						echo $_SESSION["message-update-mail-user"];
-						header("Location: my_account.php", true, 301);
-						exit();
-					}
-					else
-					{
-						echo "Wrong password";
-					}
-				}
+				echo $_SESSION["mail-wrong-password"];
+				unset($_SESSION["mail-wrong-password"]);
 			}
+			
 			echo $modify_email->submit('Modify email');
 		?>
+	</form> 
 
 
-	</form> -->
-	
-	<form action="modify_account.php?id=<?php echo $id; ?>" method='post'>
+	<form action=<?php echo "modify_account.php?id=" . $id; ?> method='post'>
 		
 		<?php 
 			
-
 			echo $modify_password->input_password('new_password');
 			if (isset($passErrors['new_password']))
 					echo $passErrors['new_password'];
+			if (isset($passErrors['password_syntax']))
+					echo $passErrors['password_syntax'];
 			echo $modify_password->input_password('new_password_confirmation');
 			if (isset($passErrors['new_password_confirmation']))
 					echo $passErrors['new_password_confirmation'];
-			echo $modify_password->input_password('password');
-			if (isset($_SESSION["message-wrong-password"]))
-					echo $_SESSION["message-wrong-password"];
+			echo $modify_password->input_password('old_password');
+			if (isset($_SESSION["pass-wrong-password"]))
+			{
+				echo $_SESSION["pass-wrong-password"];
+				unset($_SESSION["pass-wrong-password"]);
+			}
 
-			// if (isset($_POST['new_password_confirmation']) && isset($_POST['new_password']))
-			// {
-				// if ($_POST['new_password_confirmation'] == $_POST['new_password'])
-				// {
-				// 	$checkpass = $user->checkPassword($_POST["password"]);
-				// 	if ($checkpass == true)
-				// 	{
-				// 		$hash = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
-				// 		echo $_SESSION["message-update-password-user"];
-				// 	}
-				// }
-			// }
 			echo $modify_password->submit('Modify password');
 		 ?>
 	</form>
