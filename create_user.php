@@ -1,13 +1,13 @@
 <?php
 session_start();
 include_once("User.php");
-include_once("Form.php");
+include_once("Form_User.php");
 require("bdd_pdo.php");
 
 if ($_POST)
 {
 
-	$form_create_user = new Form(array('username', 'email', 'password', 'password_confirmation', 'admin'));
+	$form_create_user = new Form_User(array('username', 'email', 'password', 'password_confirmation', 'admin'));
 	$subError = $form_create_user->checkErrors($_POST);
 
 	if (count($subError) == 0)

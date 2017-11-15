@@ -2,9 +2,10 @@
 session_start();
 require "bdd_pdo.php";
 include_once("User.php");
-include_once("Form.php");
+//include_once("Form.php");
+include_once("Form_User.php");
 	
-$loginform = new Form(array(
+$loginform = new Form_User(array(
 	'email', 'password')
 );
 

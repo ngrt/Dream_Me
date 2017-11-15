@@ -1,5 +1,5 @@
 <?php 
-class Form
+abstract class Form
 {
 	private $data;
 	public $surround = 'p';
@@ -14,7 +14,7 @@ class Form
 	}
 // Different types of input
 	public function input_text($name, $arrayPOST){
-		$field = ucfirst($name);
+		$field = str_replace("_", " ", ucfirst($name));
 		
 		return $this->surround('
 			<label for="'. $name .'">'.$field.'</label>
@@ -23,7 +23,7 @@ class Form
 	}
 
 	public function input_password($name){
-		$field = ucfirst($name);
+		$field = str_replace("_", " ", ucfirst($name));
 		
 		return $this->surround('
 			<label for="'. $name .'">'.$field.'</label>
@@ -32,7 +32,7 @@ class Form
 	}
 
 	public function input_checkbox($name, $arrayPOST){
-		$field = ucfirst($name);
+		$field = str_replace("_", " ", ucfirst($name));
 
 		if ($arrayPOST)
 		{
@@ -48,8 +48,6 @@ class Form
 				<input type="checkbox" id="' . $name . '" name="' . $name . '">
 			');
 		}
-
-
 	}
 
 	private function getValue($index, $arrayPOST)
@@ -65,47 +63,8 @@ class Form
 			');
 	}
 
-// Form checking
-	public function checkErrors($arrayPOST)
-	{
-		$errors = [];
-		$fieldname = array("username", "password", "password_confirmation", "email");
+// abstract function to define in each Child
+	abstract function checkErrors($arrayPOST);
 
-		foreach ($fieldname as $value) {
-			if (!isset($arrayPOST[$value]))
-			{
-				$errors[$value] = "Field required";
-			}
-		}
-
-	// Check username length 
-		if (strlen($arrayPOST["username"]) < 3 || strlen($arrayPOST["username"]) > 10)
-		{
-			$errors["username"] = "The username must be between 3 and 10 characters";
-		}
-
-	// Check email format
-		if (!filter_var($arrayPOST["email"], FILTER_VALIDATE_EMAIL)) 
-		{
-
-			$errors["email"] = "This email is not valid\n";
-    	}
-
-	// Password checks
-		if (strlen($arrayPOST["password"]) > 2 && strlen($arrayPOST["password"]) < 11)
-		{
-			if ($arrayPOST["password_confirmation"] != $arrayPOST["password"])
-			{
-				$errors["password_confirmation"] = "Invalid password or password confirmation";	
-			}
-		}
-		else
-		{
-			$errors["password"] = "The password must be between 3 and 10 characters";
-		}
-	return $errors;
-	}
-
-	
 }
 ?>

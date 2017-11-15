@@ -14,18 +14,17 @@ require "bdd_pdo.php";
 	{
 		$username = $_SESSION["username"];
 
-		$req = $bdd->query('SELECT email FROM users WHERE username = "' . $username . '"');
+		$req = $bdd->query('SELECT email, id FROM users WHERE username = "' . $username . '"');
 		$data = $req->fetch();
 		//var_dump($data);
 		$email = $data["email"];
+		$id = $data["id"];
 		$html = "
 			<p>My account</p>
 			<p>Username : $username</p>
 			<p>Email : $email</p>
 			<p>Password : *********</p>
-			<a href='modify_account.php'>Modify my informations</a>
-			";
-
+			<a href='modify_account.php?id=" . $id . "'>Modify my informations</a>";
 	}
 ?>
 
