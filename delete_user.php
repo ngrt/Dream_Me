@@ -14,6 +14,7 @@ if (isset($_GET["id"]))
 	$data = $req->fetch();
 
 	$user = new User($bdd, $data["username"], $data["password"], $data["email"], $data["admin"]);
+	
 	if ($user->delete())
 	{
 		$_SESSION["message-crud-user"] = "This account has been deleted";
