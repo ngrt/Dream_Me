@@ -80,7 +80,6 @@ class Category
 		{
 			return false;
 		}
-
 	}
 
 	public function update($id)

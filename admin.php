@@ -181,23 +181,66 @@ $id_categories = [];
 	</div>
 </div>
 
-<!--<select name="menu_destination"> 
-<optgroup label="le site">
-     <option value="http://www.monsite.net/accueil.html">Accueil</option> 
-     <option value="http://www.monsite.net/apropos.html">Qui sommes-nous ?</option> 
-     <option value="http://www.monsite.net/contact.html">Nous contacter</option> 
-     <option value="http://www.monsite.net/plan.html">Plan du site</option> 
-</optgroup>
-<optgroup label="rubriques">
-     <option value="url_1">Catégorie 1</option> 
-     <option value="url_2">Catégorie 2</option> 
-     <option value="url_3">Catégorie 3</option> 
-</optgroup>
-</select>
--->
-
 <div class="categories-management">
 	<h1>Category Management</h1>
+	<?php 
+		$sql = "SELECT * FROM categories";
+
+		$categories_req = $bdd->query($sql);
+
+		$data = $categories_req->fetchAll();
+
+		function buildTree(array &$elements, $parentId = 0) {
+
+		    $branch = array();
+
+		    foreach ($elements as &$element) {
+
+		        if ($element['parent_id'] == $parentId) {
+		            $children = buildTree($elements, $element['id']);
+		            if ($children) {
+		                $element['children'] = $children;
+		            }
+		            $branch[$element['id']] = $element;
+		            unset($element);
+		        }
+		    }
+		    return $branch;
+		}
+
+		function printTree($tree, $r = 0, $p = null) {
+
+		    foreach ($tree as $i => $t) {
+		        $dash = ($t['parent_id'] == 0) ? '' : str_repeat('-', $r) .' ';
+
+		        printf("\t<option value='%d'>%s%s</option>\n", $t['id'], $dash, $t['name']);
+
+		        if (isset($t['children'])) {
+		            printTree($t['children'], $r+1, $t['parent_id']); 
+		        }
+		    }
+		}
+
+		function recursiveCategories($array) {
+
+		    if (count($array)) {
+		            echo "\n<ul>\n";
+		        foreach ($array as $vals) {
+
+		                    echo "<li id=\"".$vals['name']."\">".$vals['name'];
+		                    if (isset($vals['children'])) {
+		                            recursiveCategories($vals['children']);
+		                    }
+		                    echo "</li>\n";
+		        }
+		            echo "</ul>\n";
+		    }
+		} 
+
+		$tree = buildTree($data);
+
+		recursiveCategories($tree);
+	?>
 	<h2>Add a category</h2>
 	<?php 
 		echo isset($_SESSION["message-creation-cat"]) ? $_SESSION["message-creation-cat"] : null; 
@@ -215,13 +258,9 @@ $id_categories = [];
 				<select name="parent_id"> 
 					<option value="">No parent category</option>
 			<?php
-					while ($data = $request_all_categories->fetch()) 
-					{
+				printTree($tree);
 			?>
-						<option value=<?php echo $data["id"]; ?>><?php echo $data["name"] ?></option>
-			<?php
-					}
-			?>
+
 				</select>
 			<?php
 				//echo $form_create_category->input_text('parent_id', isset($_POST['parent_id']) ? $_POST['parent_id'] : null);
