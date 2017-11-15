@@ -4,8 +4,6 @@ require "bdd_pdo.php";
 $sql = "SELECT id, categories.name AS cat_name FROM categories";
 $categories = $bdd->query($sql);
 
-var_dump($_POST);
-
 function sort_category($POST)
 {
 	$string = "";
@@ -14,13 +12,12 @@ function sort_category($POST)
 	{
 		if ($POST["category_id"] == "all")
 		{
-			echo 'aaaaaa';
-			$string;
+			return $string = "1 = 1";
 		}
 
 		if ($POST["category_id"])
 		{
-			$string = "WHERE category_id = " . $POST["category_id"];
+			$string = "category_id = " . $POST["category_id"];
 		}
 	}
 	return $string;
@@ -35,32 +32,33 @@ if (isset($_POST["keywords"]))
 		if (isset($_POST["price_sort"]))
 		{
 			if ($_POST["price_sort"] == 'high')
-			{
-			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id " . sort_category($_POST) . " ORDER BY price";
+			{ 
+			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " ORDER BY price DESC";
+			var_dump($sql);
 			}
 			else
 			{
-			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id " . sort_category($_POST) . " ORDER BY price DESC";
+			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " ORDER BY price";
 			}
 		}else
 		{
-			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id " . sort_category($_POST);
+			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST);
 		}
 	}else
 	{
 		if (isset($_POST["price_sort"]))
 		{
-			if ($_POST["price_sort"] == 'low')
+			if ($_POST["price_sort"] == 'high')
 			{
-				$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " products.name LIKE '%$keywords%' ORDER BY price";
+				$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%' ORDER BY price";
 			}
 			else
 			{
-				$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE" . sort_category($_POST) . " products.name LIKE '%$keywords%' ORDER BY price DESC";
+				$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%' ORDER BY price DESC";
 			}
 		}else
 		{
-			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . "  products.name LIKE '%$keywords%'";
+			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%'";
 		}
 	}
 
@@ -124,9 +122,14 @@ if (isset($_POST["keywords"]))
 		</form>
 	</div>
 	<div class="result">
-		<p>Found <?php echo $count; ?> result(s)</p>
+		
 		<?php
-			if ($count != 0)
+			if ($_POST)
+			{
+		?>
+				<p>Found <?php echo $count; ?> result(s)</p>
+		<?php
+				if ($count != 0)
 			{
 				while ($data = $result_name->fetch(PDO::FETCH_ASSOC))
 				{
@@ -137,6 +140,8 @@ if (isset($_POST["keywords"]))
 			<?php
 				}
 			}
+			}
+			
 		?>
 
 	</div>
