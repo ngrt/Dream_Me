@@ -2,7 +2,7 @@
 session_start();
 include_once("User.php");
 include_once("Product.php");
-include_once("Form.php");
+include_once("Form_User.php");
 include_once("Form_Product.php");
 include_once("Form_Category.php");
 require("bdd_pdo.php");
@@ -17,7 +17,7 @@ if (!isset($_SESSION["username"]) && !isset($_COOKIE["username"]))
 	exit;
 }
 
-$form_create_user = new Form(array('username', 'email', 'password', 'password_confirmation', 'admin'));
+$form_create_user = new Form_User(array('username', 'email', 'password', 'password_confirmation', 'admin'));
 
 $form_create_product = new Form_Product(array('name', 'price', 'category_id'));
 

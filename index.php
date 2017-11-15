@@ -17,6 +17,13 @@ require "bdd_pdo.php";
 		{
 			$_SESSION["username"] = $_COOKIE["username"];
 		}
+	?>
+	<form method="post" action="search.php">
+		<label>Search</label>
+		<input type="text" name="keywords" placeholder="Type the dream name">
+		<input type="submit" value="Search">
+	</form>
+	<?php
 		echo "<p><a href='./logout.php'>Log out</a></p>";
 		echo "<p><a href='./my_account.php'>My account</a></p>";
 		$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
