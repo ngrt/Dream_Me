@@ -5,15 +5,13 @@ require "bdd_pdo.php";
 	{
 		$_SESSION["username"] = $_COOKIE["username"];
 	}
-	if (!isset($_SESSION["username"]) || !isset($_COOKIE["username"]))
+	if (!isset($_SESSION["username"]) && !isset($_COOKIE["username"]))
 	{
 		header("Location: ./index.php", true, 301);
 		exit;
 	}
 	if (isset($_SESSION["username"]))
 	{
-		var_dump($_COOKIE);
-
 		$username = $_SESSION["username"];
 
 		$req = $bdd->query('SELECT email FROM users WHERE username = "' . $username . '"');

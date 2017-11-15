@@ -8,7 +8,7 @@ session_start();
 	{
 		$_SESSION["username"] = $_COOKIE["username"];
 	}
-	if (!isset($_SESSION["username"]) || !isset($_COOKIE["username"]))
+	if (!isset($_SESSION["username"]) && !isset($_COOKIE["username"]))
 	{
 		header("Location: ./index.php");
 		exit;
@@ -39,6 +39,7 @@ session_start();
 	<title>Modify account - Dream.me</title>
 </head>
 <body>
+
 	<form action="modify_account.php" method='post'>
 		<?php 
 			echo $modify_email->input_text('new_email', isset($_POST['new_email']) ? $_POST['new_email'] : $email);
@@ -56,7 +57,9 @@ session_start();
 					if ($checkpass == true)
 					{
 						$user->update('email', $_POST['new_email'], $user->get_email()); //$email défini dans $user plus haut
-						echo "Email successfully modified";
+						$_SESSION["message"] = "Email successfully modified";
+						header("Location: admin.php", true, 301);
+						exit();
 					}
 					else
 					{

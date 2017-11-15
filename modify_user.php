@@ -1,18 +1,45 @@
 <?php
-	include_once("User.php");
-	include_once("Form.php");
-	require("bdd_pdo.php");
 
-	$sql = "SELECT * FROM users WHERE id=" . $_GET['id'];
+session_start();
+include_once("User.php");
+include_once("Form.php");
+require("bdd_pdo.php");
+
+if (isset($_GET["id"]))
+{
+	$id = $_GET["id"];
+
+	$sql = "SELECT * FROM users WHERE id=" . $id;
 	$req = $bdd->query($sql);
 
 	$data = $req->fetch();
 
 	$user = new User($bdd, $data["username"], $data["password"], $data["email"], $data["admin"]);
 
-	//var_dump($user->is_admin());
-
 	$form_modify_user = new Form(array('username', 'email', 'password', 'password_confirmation', 'admin'));
+
+	if ($_POST)
+	{
+		//var_dump($_POST);
+		$subError = $form_modify_user->checkErrors($_POST);
+
+		if (count($subError) == 0)
+		{	
+			$user->set_username($_POST["username"]);
+			$user->set_password($_POST["password"]);
+			$user->set_email($_POST["email"]);
+			$user->update($id);
+			header("Location: admin.php", true, 301);
+			$_SESSION["message-crud-user"] = "Your account has been updated";
+			exit();
+		}
+	}
+}
+else
+{
+	$_SESSION["message-crud-user"] = "Your account has not been updated";
+	header("Location : admin.php", true, 301);
+}
 
 ?>
 <!DOCTYPE html>

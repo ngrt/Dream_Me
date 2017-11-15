@@ -36,14 +36,14 @@ if ($_POST)
 ?>
 <form action="subscription.php" method="post">
 	<?php 
-		echo $subscform->input_text('username', $_POST);
+		echo $subscform->input_text('username', isset($_POST["username"]) ? $_POST["username"] : null) ;
 		if (isset($subError['username']))
 			echo $subError['username'];
-		echo $subscform->input_text('email', $_POST);
+		echo $subscform->input_text('email', isset($_POST["email"]) ? $_POST["email"] : null);
 		if (isset($subError['email']))
 			echo $subError['email'];
-		echo $subscform->input_password('password', $_POST);
-		echo $subscform->input_password('password_confirmation', $_POST);
+		echo $subscform->input_password('password');
+		echo $subscform->input_password('password_confirmation');
 		if (isset($subError['password']))
 			echo $subError['password'];
 		if (isset($subError['password_confirmation']))

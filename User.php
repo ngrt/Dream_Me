@@ -41,6 +41,28 @@ class User
 		return $this->admin;
 	}
 
+
+	public function set_username($username)
+	{
+		$this->username = $username;
+	}
+
+	public function set_password($password)
+	{
+		$this->password = password_hash($password, PASSWORD_BCRYPT);
+	}
+
+	public function set_email($email)
+	{
+		$this->email = $email;
+	}
+
+	public function set_admin($admin)
+	{
+		$this->admin = $admin;
+	}
+
+
 	public function checkExist()
 	{
 		$errors = [];
@@ -105,15 +127,16 @@ class User
 
 	}
 
-	public function update($type, $new, $old)
+	public function update($id)
 	{
-
-		$sql = 'UPDATE users SET '. $type . '= :new WHERE ' . $type .  '= :old';
+		$sql = 'UPDATE users SET username = :username, password = :password, email = :email, admin = :admin WHERE id =' . $id;
 		$result = $this->bdd->prepare($sql);
 
 		$data = array(
-            'new' => $new,
-            'old' => $old,
+            'username' => $this->username,
+            'password' => $this->password,
+            'email' => $this->email,
+            'admin' => $this->admin
             );
 
 		if ($result->execute($data))
@@ -126,13 +149,13 @@ class User
 			}	
 	}
 
-	public function delete($type, $value)
+	public function delete()
 	{
-		$sql = 'DELETE FROM users WHERE ' . $type . '= :value';
+		$sql = 'DELETE FROM users WHERE username = :username';
 		$result = $this->bdd->prepare($sql);
 
 		$data = array(
-            'value' => $value
+            'username' => $this->username
             );
 
 		if ($result->execute($data))
