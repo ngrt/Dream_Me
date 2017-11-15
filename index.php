@@ -6,41 +6,42 @@ require "bdd_pdo.php";
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 	<meta charset="UTF-8">
 	<title>Home - Dream.me</title>
 </head>
 <body>
-	<?php 
-	if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
-	{
-		if (!isset($_SESSION["username"]))
+	<header>
+		<form method="post" action="search.php">
+			<label>Search</label>
+			<input type="text" name="keywords" placeholder="Type the dream name">
+			<input type="submit" value="Search">
+		</form>
+		<?php
+		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
 		{
-			$_SESSION["username"] = $_COOKIE["username"];
-		}
-	?>
-	<form method="post" action="search.php">
-		<label>Search</label>
-		<input type="text" name="keywords" placeholder="Type the dream name">
-		<input type="submit" value="Search">
-	</form>
-	<?php
-		echo "<p><a href='./logout.php'>Log out</a></p>";
-		echo "<p><a href='./my_account.php'>My account</a></p>";
-		$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
-		$isadmin->execute(array(
-			'username' => $_SESSION["username"]));
-		$res = $isadmin->fetch();
+			if (!isset($_SESSION["username"]))
+			{
+				$_SESSION["username"] = $_COOKIE["username"];
+			}
+			echo "<p><a href='./logout.php'>Log out</a></p>";
+			echo "<p><a href='./my_account.php'>My account</a></p>";
+			$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
+			$isadmin->execute(array(
+				'username' => $_SESSION["username"]));
+			$res = $isadmin->fetch();
 
-		if ($res["admin"] == '1')
+			if ($res["admin"] == '1')
+			{
+				echo "<p><a href='./admin.php'>Settings [Admin mode]</a></p>";
+			}
+
+		}
+		else 
 		{
-			echo "<p><a href='./admin.php'>Settings [Admin mode]</a></p>";
+			echo "<p><a href='./login.php'>Log in - Sign in</a></p>";
 		}
-
-	}
-	else 
-	{
-		echo "<p><a href='./login.php'>Log in - Sign in</a></p>";
-	}
+	?> </header> <?php
 // Affichage tableau avec produits avec un maximum de produits par page défini par :
 $results_per_page = 3;
 
