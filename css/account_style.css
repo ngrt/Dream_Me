@@ -1,27 +1,16 @@
-#error-login
-{
-	color: red;
-}
-
-.login-background {
-	background: url(../img/bg-img-login.jpg) no-repeat center center fixed;
+.acc-background {
+	background: url(../img/nebula-img-dream.jpg) no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
 }
 
-.subsc-background {
-	background: url(../img/bg-img-login.jpg) no-repeat center center fixed;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-}
 
 .sheet {
 	background-color: white;
 	box-shadow: 0 2px 4px 1px rgba(0,0,0,.2);
+	text-align: center;
 }
 
 .sheet-page {
@@ -33,11 +22,14 @@
 	background-color: grey;
 }
 
-body {
-	text-align: center;
-	padding-top: 60px;
-	padding-bottom: 60px;
+.title {
+	font-family: 'Pacifico', cursive;
 }
+
+.container {
+	padding-top: 10%;
+}
+
 .push2 {
     margin: 0 auto;
 }
@@ -56,3 +48,21 @@ body {
     width: 380px;
 }
 
+#space-grid {
+	width: 35%;
+	margin: 1%;
+}
+
+.row {
+	padding-left: 19%;
+	padding-top: 5%;
+}
+
+form {
+	padding: 5%;
+}
+
+input[type="submit"]:hover {
+  color: white;
+  background-color: #36597d;
+}
