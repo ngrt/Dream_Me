@@ -1,0 +1,14 @@
+div .search {
+	padding-top: 50px;
+}
+
+.search-btn {
+	float: right;
+	color: white;
+	background-color: #36597d;
+}
+
+div .search-btn:hover {
+  color: white;
+  background-color: #ffbb33;
+}
