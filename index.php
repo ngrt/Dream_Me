@@ -9,10 +9,11 @@ require "bdd_pdo.php";
 	<!-- CDN Materialize -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 
-	<!--Import Google Icon Font + google font (police for logo)-->
+	<!--Import Google Icon Font + google font (polices)-->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	
 	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
 	<!-- css local -->
 	<link rel="stylesheet" href="css/index_style.css">
 
@@ -112,7 +113,7 @@ require "bdd_pdo.php";
     <div class="parallax"><img src="img/nebula-img-dream.jpg">
     </div>
 </div>
-<!-- <h2 id="title">Dream whatever you want</h2> -->
+<h2 id="title">Your life sucks, buy yourself a dream</h2>
 
 	<div class="row container"><?php
 
@@ -122,17 +123,39 @@ require "bdd_pdo.php";
 	if (isset($_GET["page"])) { $page  = $_GET["page"]; } else { $page=1; };
 		$start_from = ($page-1) * $results_per_page;
 
-	$sql = "SELECT name FROM products ORDER BY ID DESC LIMIT $start_from, ".$results_per_page;
+	$sql = "SELECT * FROM products ORDER BY ID DESC LIMIT $start_from, ".$results_per_page;
 	$result = $bdd->query($sql); 
 
-	while($dream = $result->fetch()) {
+		while($dream = $result->fetch()) {
 	?>
-<!-- REQUETES SUR LES IMAGES STOCKEES DANS IMG SRC-->
+
+<!-- FAUT FAIRE : REQUETES SUR LES IMAGES STOCKEES DANS IMG SRC-->
 	<div class="row col s12 m6 l4">
+		<a class="modal-trigger" href="#modal1">
 		<div class="card z-depth-3">
-            <div class="card-image">
-              	<a href="product.php?product=<?php echo $dream['name'] ?>"><img src="img/slide1.jpg"><span class="card-title"><?php echo $dream['name'] ?></span>
-              </a>
+            <div class="card-image">  
+              	<img src="<?php echo $dream['imgurl']; ?>"/>
+              	<span class="card-title"><?php echo $dream['name'] ?></span>
+              
+          	</div>
+		</a>
+          	<div id="modal1" class="modal">
+          		<div class="modal-content">
+          			<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat" style="float: right;">Close</a>
+					<a href="cart.php" class="modal-action modal-close waves-effect waves-green btn" style="float: right;">Add to shopping cart</a>
+
+					<h4><?php echo $dream['price'] ?> $</h4>
+				</div>
+				<div class="modal-content">
+					<h4><?php echo $dream['name'] ?></h4>
+					<p><?php echo $dream['description'] ?></p>
+				</div>
+				<div class="modal-content">
+					<div class="card-image">  
+	              	<img src="<?php echo $dream['imgurl'] ?>"/>
+	              </div>
+	          </div>
+				
           	</div>
         </div>
     </div>
@@ -158,7 +181,18 @@ require "bdd_pdo.php";
 		?>
 		</ul>
 	</div>
-<footer>
+<footer class="page-footer">
+	<div class="container">
+		<div class="row">
+			<div class="col l6 s12">
+                <h5 class="white-text">Footer Content</h5>
+                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+            </div>
+            <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Links</h5>
+                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+		</div>
+	</div>
 </footer>
 	</div>
 </div>
@@ -180,6 +214,16 @@ require "bdd_pdo.php";
      		$(".button-collapse").sideNav();
         </script>
 
+		<!-- Materializecss pop-up cards -->
+		<script>
+     		$(document).ready(function(){
+		    // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+		    $('.modal').modal();
+		    $('.trigger-modal').modal();
+		  });
+        </script>
+        
+
         <style>
         	#sidenav-overlay
         	{
@@ -191,7 +235,3 @@ require "bdd_pdo.php";
     
 </body>
 </html>
-
-
-
-
