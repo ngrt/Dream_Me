@@ -85,9 +85,7 @@ function recursiveCategories($array) {
 } 
 
 $tree = buildTree($data);
-
 ?>
-
 
 <!DOCTYPE html>
 <html>
@@ -101,14 +99,112 @@ $tree = buildTree($data);
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	
 	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="admin_style.css">
+	<link rel="stylesheet" type="text/css" href="css/admin_style.css">
 </head>
 <body>
 
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+
+<header>
+		<div class="navbar-fixed">
+		<nav class="nav-extended">
+		<div class="nav-wrapper">
+			<a href="#" class="brand-logo">Dream.me</a>
+<!-- MENU NORMAL-->
+		<ul class="right hide-on-med-and-down">
+	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
+		<li><a href="search.php"><i class="material-icons">search</i></a></li>
+	<!-- ICONE CLIQUABLE PANIER-->
+		<li><a href="cart.php"><i class="material-icons">shopping_cart</i></a></li>
+
+		<?php
+		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
+		{
+			if (!isset($_SESSION["username"]))
+			{
+				$_SESSION["username"] = $_COOKIE["username"];
+			}
+			$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
+			$isadmin->execute(array(
+				'username' => $_SESSION["username"]));
+			$res = $isadmin->fetch();
+
+		?></li><li><?php
+			if ($res["admin"] == '1')
+			{
+				echo "<a href='./admin.php'>Settings [Admin mode]</a>";
+			}
+		?></li><li><?php
+			echo "<a href='./my_account.php'>My account</a>";
+		?></li><li><?php
+			echo "<a href='./logout.php'>Log out</a>";
+		}
+		else 
+		{
+			?></li><li><?php
+			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
+		}
+
+	?></li></ul>
+<!-- UTILISATION DE L'ID mobile-demo POUR ACTIVER LE MENU (en dessous du menu normal)-->
+	<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+<!-- DEBUT MENU HAMBURGER MOBILE-->
+		<ul class="side-nav" id="mobile-demo">
+	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
+		<li><a href="search.php"><i class="material-icons">search</i>Search your dream</a></li>
+	<!-- ICONE CLIQUABLE PANIER-->
+		<li><a href="cart.php"><i class="material-icons">shopping_cart</i>Your shopping cart</a></li>
+
+		<?php
+		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
+		{
+			if (!isset($_SESSION["username"]))
+			{
+				$_SESSION["username"] = $_COOKIE["username"];
+			}
+			$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
+			$isadmin->execute(array(
+				'username' => $_SESSION["username"]));
+			$res = $isadmin->fetch();
+
+		?>><li><?php
+			if ($res["admin"] == '1')
+			{
+				echo "<a href='./admin.php'>Settings [Admin mode]</a>";
+			}
+		?></li><li><?php
+			echo "<a href='./my_account.php'>My account</a>";
+		?></li><li><?php
+			echo "<a href='./logout.php'>Log out</a>";
+		}
+		else 
+		{
+			?></li><li><?php
+			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
+		}
+		?>
+	</li>
+	</ul>
+<!-- FIN MENU HAMBURGER MOBILE-->
+	</div>
+
+	<div class="nav-content">
+      <ul class="tabs tabs-transparent">
+        <li class="tab"><a href="#users-management">Users</a></li>
+        <li class="tab"><a class="active" href="#products-management">Products</a></li>
+        <li class="tab"><a href="#categories-management">Categories</a></li>
+      </ul>
+    </div>
+</div>
+</nav>
+</header>
+ 
+<br>
 <div class="container">
 	<div class="row">
-		<div class="users-management col s8 offset-s2">
-			<h1>Users</h1>
+		<div class="col s8 offset-s2" id="users-management">
 			<div class="row">
 				<div class="col s12">
 					<h2>Create a new user</h2>
@@ -188,8 +284,7 @@ $tree = buildTree($data);
 			</div>
 		</div>
 
-		<div class="products-management col s8 offset-s2">
-		<h1>Products Management</h1>
+		<div class="col s8 offset-s2" id="products-management">
 		<div class="create-product">
 			<h2>Create a new product</h2>
 			<?php 
@@ -256,8 +351,8 @@ $tree = buildTree($data);
 		</div>
 		</div>
 
-		<div class="categories-management col s8 offset-s2">
-			<h1>Category Management</h1>
+		<div class="col s8 offset-s2" id="categories-management">
+			<h2>List of all the categories</h2>
 			<?php 
 
 				recursiveCategories($tree);
@@ -284,7 +379,6 @@ $tree = buildTree($data);
 
 						</select>
 					<?php
-						//echo $form_create_category->input_text('parent_id', isset($_POST['parent_id']) ? $_POST['parent_id'] : null);
 						echo $form_create_category->submit('Add a category')
 					?>
 

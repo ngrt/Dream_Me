@@ -8,8 +8,61 @@ ul.browser-default li {
   list-style-type: initial;
 }
 
-[type="checkbox"]:not(:checked), [type="checkbox"]:checked {
-    position: static;
-    left: 0px; 
-    opacity: 1; 
+/*.form-inline {
+	display:inline-block;
+	vertical-align: middle;
+}*/
+
+nav .brand-logo {
+	font-family: 'Pacifico', cursive;
+	color: #36597d;
+	font-size: 35px;
+	padding-left: 25px;
+}
+
+.nav-wrapper {
+	background-color: white;
+}
+
+nav .nav-wrapper {
+	padding-right: 50px;
+}
+
+.nav-content
+{
+	background-color: #36597d;
+}
+
+nav ul a{
+	color: black;
+}
+
+.btn {
+	color: black;
+	background-color: #ffbb33;
+}
+
+.navbar-fixed .nav-wrapper > ul > li > a:hover {
+  color: white;
+  background-color: #36597d;
+}
+
+nav .button-collapse {
+	float: right;
+}
+
+nav a {
+	color: #36597d;
+}
+
+img {
+	max-width:auto
+}
+
+.pagination {
+	text-align: center;
+}
+
+.parallax-container {
+	margin-bottom: 20px;
 }
