@@ -14,9 +14,9 @@ if (isset($_GET["id"]))
 
 	$data = $req->fetch();
 
-	$product = new Product($bdd, $data["name"], $data["price"], $data["category_id"]);
+	$product = new Product($bdd, $data["name"], $data["price"], $data["category_id"], $data["imgurl"]);
 
-	$form_modify_product = new Form_Product(array('name', 'price', 'category_id'));
+	$form_modify_product = new Form_Product(array('name', 'price', 'category_id', 'imgurl'));
 
 	if ($_POST)
 	{
@@ -28,6 +28,7 @@ if (isset($_GET["id"]))
 			$product->set_name($_POST["name"]);
 			$product->set_price($_POST["price"]);
 			$product->set_category_id($_POST["category_id"]);
+			$product->set_imgurl($_POST["imgurl"]);
 			$product->update($id);
 			$_SESSION["message-crud-product"] = "The product has been updated";
 			unset($_POST);
@@ -101,32 +102,133 @@ $tree = buildTree($data);
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Modify User - Dream.me</title>
+	<title>Modify Product - Dream.me</title>
+			<!-- CDN Materialize -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+	<!--Import Google Icon Font + google font (police for logo)-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	
+	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+
+
+	<link rel="stylesheet" type="text/css" href="css/admin_style.css">
 </head>
 <body>
-	<div class="modify-product">
-		<form action="" method="post">
-			<?php 
-				echo $form_modify_product->input_text('name', $product->get_name());
-				if (isset($subError['name']))
-					echo $subError['name'];
-				echo $form_modify_product->input_text('price', $product->get_price());
-				if (isset($subError['price']))
-					echo $subError['price'];
-				?>
-				<label>Category id</label>
-				<select name="category_id"> 
-					<option value="all">All</option>
-			<?php
-						printTree($tree);
-			?>
-				</select>
-			<?php
-				if (isset($subError['category_id']))
-					echo $subError['category_id'];
-				echo $form_modify_product->submit('Modify');
-			?>
-		</form>
+
+
+	<header>
+		<div class="navbar-fixed">
+		<nav>
+		<div class="nav-wrapper">
+			<a href="#" class="brand-logo">Dream.me</a>
+
+<!-- MENU NORMAL-->
+		<ul class="right hide-on-med-and-down">
+	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
+		<li><a href="search.php"><i class="material-icons">search</i></a></li>
+	<!-- ICONE CLIQUABLE PANIER-->
+		<li><a href="cart.php"><i class="material-icons">shopping_cart</i></a></li>
+
+		<?php
+		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
+		{
+			if (!isset($_SESSION["username"]))
+			{
+				$_SESSION["username"] = $_COOKIE["username"];
+			}
+			$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
+			$isadmin->execute(array(
+				'username' => $_SESSION["username"]));
+			$res = $isadmin->fetch();
+
+		?></li><li><?php
+			if ($res["admin"] == '1')
+			{
+				echo "<a href='./admin.php'>Settings [Admin mode]</a>";
+			}
+		?></li><li><?php
+			echo "<a href='./my_account.php'>My account</a>";
+		?></li><li><?php
+			echo "<a href='./logout.php'>Log out</a>";
+		}
+		else 
+		{
+			?></li><li><?php
+			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
+		}
+
+	?></li></ul>
+<!-- UTILISATION DE L'ID mobile-demo POUR ACTIVER LE MENU (en dessous du menu normal)-->
+	<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+<!-- DEBUT MENU HAMBURGER MOBILE-->
+		<ul class="side-nav" id="mobile-demo">
+	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
+		<li><a href="search.php"><i class="material-icons">search</i>Search your dream</a></li>
+	<!-- ICONE CLIQUABLE PANIER-->
+		<li><a href="cart.php"><i class="material-icons">shopping_cart</i>Your shopping cart</a></li>
+
+		<?php
+		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
+		{
+			if (!isset($_SESSION["username"]))
+			{
+				$_SESSION["username"] = $_COOKIE["username"];
+			}
+			$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
+			$isadmin->execute(array(
+				'username' => $_SESSION["username"]));
+			$res = $isadmin->fetch();
+
+		?>><li><?php
+			if ($res["admin"] == '1')
+			{
+				echo "<a href='./admin.php'>Settings [Admin mode]</a>";
+			}
+		?></li><li><?php
+			echo "<a href='./my_account.php'>My account</a>";
+		?></li><li><?php
+			echo "<a href='./logout.php'>Log out</a>";
+		}
+		else 
+		{
+			?></li><li><?php
+			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
+		}
+		?>
+	</li></ul>
+<!-- FIN MENU HAMBURGER MOBILE-->
+	</div></nav></div>
+	</header>
+
+	<div class="container">
+		<div class="row">
+			<div class="col s8 offset-s2">
+				<h3>Modify product</h3>
+				<form action="" method="post">
+					<?php 
+						echo $form_modify_product->input_text('name', $product->get_name());
+						if (isset($subError['name']))
+							echo $subError['name'];
+						echo $form_modify_product->input_text('price', $product->get_price());
+						if (isset($subError['price']))
+							echo $subError['price'];
+						echo $form_modify_product->input_text('imgurl', $product->get_imgurl());
+						?>
+						<label>Category id</label>
+						<select name="category_id" class="browser-default"> 
+					<?php
+								printTree($tree);
+					?>
+						</select>
+					<?php
+						if (isset($subError['category_id']))
+							echo $subError['category_id'];
+						echo $form_modify_product->submit('Modify');
+					?>
+				</form>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

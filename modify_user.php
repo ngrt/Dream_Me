@@ -53,12 +53,101 @@ else
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	
 	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+
+
+	<link rel="stylesheet" type="text/css" href="css/admin_style.css">
 </head>
 <body>
+
+	<header>
+		<div class="navbar-fixed">
+		<nav>
+		<div class="nav-wrapper">
+			<a href="#" class="brand-logo">Dream.me</a>
+
+<!-- MENU NORMAL-->
+		<ul class="right hide-on-med-and-down">
+	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
+		<li><a href="search.php"><i class="material-icons">search</i></a></li>
+	<!-- ICONE CLIQUABLE PANIER-->
+		<li><a href="cart.php"><i class="material-icons">shopping_cart</i></a></li>
+
+		<?php
+		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
+		{
+			if (!isset($_SESSION["username"]))
+			{
+				$_SESSION["username"] = $_COOKIE["username"];
+			}
+			$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
+			$isadmin->execute(array(
+				'username' => $_SESSION["username"]));
+			$res = $isadmin->fetch();
+
+		?></li><li><?php
+			if ($res["admin"] == '1')
+			{
+				echo "<a href='./admin.php'>Settings [Admin mode]</a>";
+			}
+		?></li><li><?php
+			echo "<a href='./my_account.php'>My account</a>";
+		?></li><li><?php
+			echo "<a href='./logout.php'>Log out</a>";
+		}
+		else 
+		{
+			?></li><li><?php
+			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
+		}
+
+	?></li></ul>
+<!-- UTILISATION DE L'ID mobile-demo POUR ACTIVER LE MENU (en dessous du menu normal)-->
+	<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+<!-- DEBUT MENU HAMBURGER MOBILE-->
+		<ul class="side-nav" id="mobile-demo">
+	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
+		<li><a href="search.php"><i class="material-icons">search</i>Search your dream</a></li>
+	<!-- ICONE CLIQUABLE PANIER-->
+		<li><a href="cart.php"><i class="material-icons">shopping_cart</i>Your shopping cart</a></li>
+
+		<?php
+		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
+		{
+			if (!isset($_SESSION["username"]))
+			{
+				$_SESSION["username"] = $_COOKIE["username"];
+			}
+			$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
+			$isadmin->execute(array(
+				'username' => $_SESSION["username"]));
+			$res = $isadmin->fetch();
+
+		?>><li><?php
+			if ($res["admin"] == '1')
+			{
+				echo "<a href='./admin.php'>Settings [Admin mode]</a>";
+			}
+		?></li><li><?php
+			echo "<a href='./my_account.php'>My account</a>";
+		?></li><li><?php
+			echo "<a href='./logout.php'>Log out</a>";
+		}
+		else 
+		{
+			?></li><li><?php
+			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
+		}
+		?>
+	</li></ul>
+<!-- FIN MENU HAMBURGER MOBILE-->
+	</div></nav></div>
+	</header>
+
+
 	<div class="container">
 		<div class="row">
 			<div class="col s8 offset-s2">
-				<h1>Modify user</h1>
+				<h3>Modify user</h3>
 				<div class="modify-user">
 					<form action="" method="post">
 						<?php 

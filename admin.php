@@ -19,7 +19,7 @@ if (!isset($_SESSION["username"]) && !isset($_COOKIE["username"]))
 
 $form_create_user = new Form_User(array('username', 'email', 'password', 'password_confirmation', 'admin'));
 
-$form_create_product = new Form_Product(array('name', 'price', 'category_id'));
+$form_create_product = new Form_Product(array('name', 'price', 'category_id', 'imgurl'));
 
 $form_create_category = new Form_Category(array('name', 'price_id'));
 
@@ -94,7 +94,6 @@ $tree = buildTree($data);
 
 	<!-- CDN Materialize -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-
 	<!--Import Google Icon Font + google font (police for logo)-->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	
@@ -105,13 +104,14 @@ $tree = buildTree($data);
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="bootstrap-treeview.js"></script>
 
 
 <header>
 		<div class="navbar-fixed">
 		<nav class="nav-extended">
 		<div class="nav-wrapper">
-			<a href="#" class="brand-logo">Dream.me</a>
+			<a href="index.php" class="brand-logo">Dream.me</a>
 <!-- MENU NORMAL-->
 		<ul class="right hide-on-med-and-down">
 	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
@@ -131,7 +131,8 @@ $tree = buildTree($data);
 				'username' => $_SESSION["username"]));
 			$res = $isadmin->fetch();
 
-		?></li><li><?php
+		?></li>
+		<li class="active"><?php
 			if ($res["admin"] == '1')
 			{
 				echo "<a href='./admin.php'>Settings [Admin mode]</a>";
@@ -201,13 +202,12 @@ $tree = buildTree($data);
 </nav>
 </header>
  
-<br>
 <div class="container">
 	<div class="row">
-		<div class="col s8 offset-s2" id="users-management">
+		<div class="col s12" id="users-management">
 			<div class="row">
-				<div class="col s12">
-					<h2>Create a new user</h2>
+				<div class="col s6">
+					<h3>Create a new user</h3>
 					<?php 
 						if (isset($_SESSION["message-creation"]))
 						{
@@ -235,11 +235,8 @@ $tree = buildTree($data);
 						?>
 					</form>
 				</div>
-			</div>
-
-			<div class="row">
-				<div class="col s12">
-					<h2>List of all the members</h2>
+				<div class="col s6">
+					<h3>List of all the members</h3>
 					<?php 
 						if (isset($_SESSION["message-creation"]))
 						{
@@ -284,110 +281,119 @@ $tree = buildTree($data);
 			</div>
 		</div>
 
-		<div class="col s8 offset-s2" id="products-management">
-		<div class="create-product">
-			<h2>Create a new product</h2>
-			<?php 
-				echo isset($_SESSION["message-creation-product"]) ? $_SESSION["message-creation-product"] : null; 
-				unset($_SESSION["message-creation-product"])
-			?>
-			<form action="create_product.php" method="post">
+		<div class="col s12" id="products-management">
+			<div class="create-product">
+				<div class="col s6">
+					<h3>Create a new product</h3>
+					<?php 
+						echo isset($_SESSION["message-creation-product"]) ? $_SESSION["message-creation-product"] : null; 
+						unset($_SESSION["message-creation-product"])
+					?>
+					<form action="create_product.php" method="post">
+						<?php 
+							echo $form_create_product->input_text('name', isset($_POST['name']) ? $_POST['name'] : null);
+							if (isset($_SESSION['errors']['name']))
+								echo $_SESSION['errors']['name'];
+							echo $form_create_product->input_text('price', isset($_POST['price']) ? $_POST['price'] : null);
+							if (isset($_SESSION['errors']['price']))
+								echo $_SESSION['errors']['price'];
+							echo $form_create_product->input_text('imgurl', isset($_POST['imgurl']) ? $_POST['imgurl'] : null);
+						?>
+							<label>Category id</label>
+							<select name="category_id" class="browser-default"> 
+						<?php
+									printTree($tree);
+						?>
+							</select>
+						<?php
+							//echo $form_create_product->input_text('category_id', isset($_POST['category_id']) ? $_POST['category_id'] : null);
+							if (isset($_SESSION['errors']['category_id']))
+								echo $_SESSION['errors']['category_id'];
+							echo $form_create_product->submit('Create a product');
+						?>
+					</form>
+				</div>
+			</div>
+
+			<div class="col s6">
+				<div class="table-products">
+					<h3>List of all the products</h3>
+					<?php 
+						echo isset($_SESSION["message-crud-product"]) ? $_SESSION["message-crud-product"] : null; 
+						unset($_SESSION["message-crud-product"])
+					?>
+					<table class="responsive-table striped centered">
+						<tr>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Price ($)</th>
+							<th>Category</th>
+							<th>Modify</th>
+							<th>Delete</th>
+						</tr>
+						<?php
+							while ($data = $request_all_products->fetch())
+							{
+						?>
+						<tr>
+							<td><?php echo $data["id"]; ?></td>
+							<td><?php echo $data["name"]; ?></td>
+							<td><?php echo $data["price"]; ?></td>
+							<td><?php echo $data["category"]; ?></td>
+							<td><a href="modify_product.php?id=<?php echo $data["id"]; ?>">X</a></td>
+							<td><a href="delete_product.php?id=<?php echo $data["id"]; ?>">X</a></td>
+						</tr>
+
+						<?php
+							}
+						?>
+					</table>
+				</div>
+			</div>
+		</div>
+	
+
+		<div class="col s12" id="categories-management">
+			<div class="col s6">
+				<h3>List of all the categories</h3>
+				<?php
+					recursiveCategories($tree);
+				?>
+
+			</div>
+
+			<div class="col s6">
+
+				<h3>Add a category</h3>
 				<?php 
-					echo $form_create_product->input_text('name', isset($_POST['name']) ? $_POST['name'] : null);
-					if (isset($_SESSION['errors']['name']))
-						echo $_SESSION['errors']['name'];
-					echo $form_create_product->input_text('price', isset($_POST['price']) ? $_POST['price'] : null);
-					if (isset($_SESSION['errors']['price']))
-						echo $_SESSION['errors']['price'];
+					echo isset($_SESSION["message-creation-cat"]) ? $_SESSION["message-creation-cat"] : null; 
+					unset($_SESSION["message-creation-cat"])
 				?>
-					<label>Category id</label>
-					<select name="category_id" class="browser-default"> 
-						<option value="all">All</option>
-				<?php
+				<div class = "create-category">
+					<form method="post" action="create_category.php">
+
+						<?php
+							echo $form_create_category->input_text('name', isset($_POST['name']) ? $_POST['name'] : null);
+							if (isset($_SESSION['errors']['namec']))
+								echo $_SESSION['errors']['namec'];
+						?>
+							<label>Parent category</label>
+							<select name="parent_id" class="browser-default"> 
+								<option value="">No parent category</option>
+						<?php
 							printTree($tree);
-				?>
-					</select>
-				<?php
-					//echo $form_create_product->input_text('category_id', isset($_POST['category_id']) ? $_POST['category_id'] : null);
-					if (isset($_SESSION['errors']['category_id']))
-						echo $_SESSION['errors']['category_id'];
-					echo $form_create_product->submit('Create a product');
-				?>
-			</form>
-		</div>
+						?>
 
-		<div class="table-products">
-			<h2>List of all the products</h2>
-			<?php 
-				echo isset($_SESSION["message-crud-product"]) ? $_SESSION["message-crud-product"] : null; 
-				unset($_SESSION["message-crud-product"])
-			?>
-			<table class="responsive-table striped centered">
-				<tr>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Price ($)</th>
-					<th>Category</th>
-					<th>Modify</th>
-					<th>Delete</th>
-				</tr>
-				<?php
-					while ($data = $request_all_products->fetch())
-					{
-				?>
-				<tr>
-					<td><?php echo $data["id"]; ?></td>
-					<td><?php echo $data["name"]; ?></td>
-					<td><?php echo $data["price"]; ?></td>
-					<td><?php echo $data["category"]; ?></td>
-					<td><a href="modify_product.php?id=<?php echo $data["id"]; ?>">X</a></td>
-					<td><a href="delete_product.php?id=<?php echo $data["id"]; ?>">X</a></td>
-				</tr>
+							</select>
+						<?php
+							echo $form_create_category->submit('Add a category')
+						?>
 
-				<?php
-					}
-				?>
-			</table>
-		</div>
-		</div>
-
-		<div class="col s8 offset-s2" id="categories-management">
-			<h2>List of all the categories</h2>
-			<?php 
-
-				recursiveCategories($tree);
-			?>
-			<h2>Add a category</h2>
-			<?php 
-				echo isset($_SESSION["message-creation-cat"]) ? $_SESSION["message-creation-cat"] : null; 
-				unset($_SESSION["message-creation-cat"])
-			?>
-			<div class = "create-category">
-				<form method="post" action="create_category.php">
-
-					<?php
-						echo $form_create_category->input_text('name', isset($_POST['name']) ? $_POST['name'] : null);
-						if (isset($_SESSION['errors']['namec']))
-							echo $_SESSION['errors']['namec'];
-					?>
-						<label>Parent category</label>
-						<select name="parent_id" class="browser-default"> 
-							<option value="">No parent category</option>
-					<?php
-						printTree($tree);
-					?>
-
-						</select>
-					<?php
-						echo $form_create_category->submit('Add a category')
-					?>
-
-				</form>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
-	
 </body>
 </html>

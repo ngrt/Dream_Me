@@ -3,7 +3,7 @@
 
 	$host = "localhost";
 	$port = 3306;
-	$db = "pool_php_rush";
+	$db = "rush";
 	$username = "root";
 	$passwd = "root";
 
