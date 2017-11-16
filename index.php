@@ -130,13 +130,12 @@ require "bdd_pdo.php";
 	?>
 
 <!-- FAUT FAIRE : REQUETES SUR LES IMAGES STOCKEES DANS IMG SRC-->
-	<div class="row col s12 m6 l4">
+	<div class="row col s12 m6 l4 align-them">
 		<a class="modal-trigger" href="#modal1">
 		<div class="card z-depth-3">
-            <div class="card-image">  
+            <div class="card-image">
               	<img src="<?php echo $dream['imgurl']; ?>"/>
-              	<span class="card-title"><?php echo $dream['name'] ?></span>
-              
+              	<span class="card-title"><?php echo $dream['name'] ?></span> 
           	</div>
 		</a>
           	<div id="modal1" class="modal">

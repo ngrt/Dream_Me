@@ -13,6 +13,11 @@ nav .brand-logo {
 	padding-left: 25px;
 }
 
+.align-them {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-around;
+}
 
 .modal.open {
 	height: 100% !important;
