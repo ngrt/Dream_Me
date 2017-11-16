@@ -107,10 +107,12 @@ require "bdd_pdo.php";
 <!-- FIN MENU HAMBURGER MOBILE-->
 	</div></nav></div>
 	</header>
-
+ 
 <div class="parallax-container">
-    <div class="parallax"><img src="img/slide1.jpg"></div>
-  </div>
+    <div class="parallax"><img src="img/nebula-img-dream.jpg">
+    </div>
+</div>
+<!-- <h2 id="title">Dream whatever you want</h2> -->
 
 	<div class="row container"><?php
 

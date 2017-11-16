@@ -2,7 +2,6 @@
 session_start();
 require "bdd_pdo.php";
 include_once("User.php");
-//include_once("Form.php");
 include_once("Form_User.php");
 	
 $loginform = new Form_User(array(
@@ -50,37 +49,57 @@ if (isset($_POST["email"]) && isset($_POST["password"]))
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Login Dream</title>
+	<!-- CDN Materialize -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-</head>
-<body>
 
-	<div class="container">
+	<!--Import Google Icon Font + google font (police for logo)-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	
+	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+	<!-- css local -->
+	<link rel="stylesheet" href="css/index_style.css">
+	<link rel="stylesheet" href="css/form_style.css">
+	<link rel="stylesheet" href="css/login_style.css">
+
+	<!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Login Dream</title>
+</head>
+<body class="login login-background">
+<div class="container">
+<div class="row sign-in">
+	<div class="content col2 push2 sheet sheet-page">
 		<div class="row">
-			<p>If you have an account, log in:</p>
-			
-			<div class="col-s12">
-			<form action="login.php" method="post">
+			<div class="content col4 text-center">
+				<a href="#" class="brand-logo">Dream.me</a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="content col4 text-center">
+            <span class="sign-up-head">Login to your account</span>
+         	</div>
+        </div>
+		<form action="login.php" method="post">
 			<?php 
 				echo $loginform->input_text('email', isset($_POST['email']) ? $_POST['email'] : null);
 				echo $loginform->input_password('password');
 				echo $loginform->input_checkbox('remember_me', isset($_POST['remember_me']));
-				echo $loginform->submit('Envoyer');
+				// echo $loginform->submit('Login');
+				echo "<div><button class='btn waves-effect waves-light' type='submit' name='action'>Login
+			    </button></div>";
 			?>
 		</form>
 
-			</div>
-		</div>
-		
-		
 
-
-		<p>New customer</p>
-		<p>Register now for faster shopping next time you order. You can also manage your wish list, redeem e-vouchers and select preferences.</p>
-		<a href="./subscription.php">Register now</a>
 	</div>
-
+</div>
+</div>
+<div class="row sign-in">
+	<div class="content col2 push2">
+		<button id="new-acc" class="btn create-account-switch">
+		<a href="./subscription.php" id="new-acc">Create a new account!</a></button>
+	</div>
+</div>
 
 </body>
 </html>

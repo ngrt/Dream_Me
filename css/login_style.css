@@ -1,3 +1,53 @@
-html body {
-	background-image: url(img/bg-img-login.jpg);
+.login-background {
+	background: url(../img/bg-img-login.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
 }
+
+.subsc-background {
+	background: url(../img/bg-img-login.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+.sheet {
+	background-color: white;
+	box-shadow: 0 2px 4px 1px rgba(0,0,0,.2);
+}
+
+.sheet-page {
+	padding: 20px;
+}
+
+#new-acc {
+	color: white;
+	background-color: grey;
+}
+
+body {
+	text-align: center;
+	padding-top: 60px;
+	padding-bottom: 60px;
+}
+.push2 {
+    margin: 0 auto;
+}
+
+.col2 {
+    width: 350px;
+}
+
+@media only screen and (min-width: 1200px)
+.push2 {
+    margin-left: 400px;
+}
+
+@media only screen and (min-width: 1200px)
+.col2 {
+    width: 380px;
+}
+

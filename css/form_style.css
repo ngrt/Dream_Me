@@ -8,7 +8,8 @@ div .search {
 	background-color: #36597d;
 }
 
-div .search-btn:hover {
+
+div .btn:hover {
   color: white;
   background-color: #ffbb33;
 }

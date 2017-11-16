@@ -2,12 +2,22 @@
 	display:inline-block;
 	vertical-align: middle;
 }*/
+div {
+    display: block;
+}
 
 nav .brand-logo {
 	font-family: 'Pacifico', cursive;
 	color: #36597d;
 	font-size: 35px;
 	padding-left: 25px;
+}
+
+
+.brand-logo {
+	font-family: 'Pacifico', cursive;
+	color: #36597d;
+	font-size: 35px;
 }
 
 .nav-wrapper {
@@ -47,6 +57,14 @@ img {
 
 .pagination {
 	text-align: center;
+}
+
+h2 #title {
+	position: fixed;
+	top: 50px;
+	left: 200px;
+	color: white;
+    z-index: 1;
 }
 
 .parallax-container {

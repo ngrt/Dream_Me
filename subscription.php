@@ -4,10 +4,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
+	<!-- CDN Materialize -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+	<!--Import Google Icon Font + google font (police for logo)-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	
+	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+	<!-- css local -->
+	<link rel="stylesheet" href="css/index_style.css">
+	<link rel="stylesheet" href="css/form_style.css">
+	<link rel="stylesheet" href="css/login_style.css">
+
+	<!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<title>Dream subscribe</title>
 </head>
-<body>
+<body class="subsc-background">
+
 <?php 
 include_once("User.php");
 include_once("Form_User.php");
@@ -44,6 +58,20 @@ if ($_POST)
 }
 
 ?>
+
+<div class="container">
+<div class="row sign-in">
+	<div class="content col2 push2 sheet sheet-page">
+		<div class="row">
+			<div class="content col4 text-center">
+				<a href="#.php" class="brand-logo">Dream.me</a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="content col4 text-center">
+            <span class="sign-up-head">Fill the fields to create your account</span>
+         	</div>
+        </div>
 <form action="subscription.php" method="post">
 	<?php 
 		echo $subscform->input_text('username', isset($_POST["username"]) ? $_POST["username"] : null) ;
@@ -58,10 +86,9 @@ if ($_POST)
 			echo $subError['password'];
 		if (isset($subError['password_confirmation']))
 			echo $subError['password_confirmation'];
-		echo $subscform->submit('Envoyer');
+		echo "<div><button class='btn waves-effect waves-light' type='submit' name='action'>Sign in
+			</button></div>";
 	?>
 </form>
-
-
 </body>
 </html>
