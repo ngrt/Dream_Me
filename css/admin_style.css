@@ -1,0 +1,15 @@
+ul.browser-default {
+  padding-left: 30px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+ul.browser-default li {
+  list-style-type: initial;
+}
+
+[type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+    position: static;
+    left: 0px; 
+    opacity: 1; 
+}

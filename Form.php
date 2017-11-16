@@ -37,15 +37,15 @@ abstract class Form
 		if ($arrayPOST)
 		{
 			return $this->surround('
-				<label for="'. $name .'">'.$field.'</label>
 				<input type="checkbox" id="' . $name . '" name="' . $name . '"checked>
+				<label for="'. $name .'">'.$field.'</label>
 			');
 		}
 		else
 		{
 			return $this->surround('
-				<label for="'. $name .'">'.$field.'</label>
 				<input type="checkbox" id="' . $name . '" name="' . $name . '">
+				<label for="'. $name .'">'.$field.'</label>
 			');
 		}
 	}
@@ -59,7 +59,7 @@ abstract class Form
 // Submit function with parameter string $type (ex: Submit, Register, etc...)
 	public function submit($type){
 		return $this->surround('
-			<input type="submit" value="'.$type.'">
+			<input class="waves-effect waves-light btn" type="submit" value="'.$type.'">
 			');
 	}
 

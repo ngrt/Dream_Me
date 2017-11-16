@@ -46,27 +46,41 @@ else
 <html>
 <head>
 	<title>Modify User - Dream.me</title>
+		<!-- CDN Materialize -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+	<!--Import Google Icon Font + google font (police for logo)-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	
+	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
 </head>
 <body>
-	<div class="modify-user">
-		<form action="" method="post">
-			<?php 
-				echo $form_modify_user->input_text('username', $user->get_username());
-				if (isset($subError['username']))
-					echo $subError['username'];
-				echo $form_modify_user->input_text('email', $user->get_email());
-				if (isset($subError['email']))
-					echo $subError['email'];
-				echo $form_modify_user->input_password('password');
-				echo $form_modify_user->input_password('password_confirmation');
-				if (isset($subError['password']))
-					echo $subError['password'];
-				if (isset($subError['password_confirmation']))
-					echo $subError['password_confirmation'];
-				echo $form_modify_user->input_checkbox('admin', $user->is_admin());
-				echo $form_modify_user->submit('Envoyer');
-			?>
-		</form>
+	<div class="container">
+		<div class="row">
+			<div class="col s8 offset-s2">
+				<h1>Modify user</h1>
+				<div class="modify-user">
+					<form action="" method="post">
+						<?php 
+							echo $form_modify_user->input_text('username', $user->get_username());
+							if (isset($subError['username']))
+								echo $subError['username'];
+							echo $form_modify_user->input_text('email', $user->get_email());
+							if (isset($subError['email']))
+								echo $subError['email'];
+							echo $form_modify_user->input_password('password');
+							echo $form_modify_user->input_password('password_confirmation');
+							if (isset($subError['password']))
+								echo $subError['password'];
+							if (isset($subError['password_confirmation']))
+								echo $subError['password_confirmation'];
+							echo $form_modify_user->input_checkbox('admin', $user->is_admin());
+							echo $form_modify_user->submit('Envoyer');
+						?>
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 </html>
