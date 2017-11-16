@@ -41,7 +41,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]))
 	}
 	else
 	{
-		echo "Incorrect email/password";
+		$errorMessage = "Incorrect email/password";
 	}
 }
 ?>
@@ -63,7 +63,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]))
 
 	<!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<title>Login Dream</title>
+	<title>Login to Dream</title>
 </head>
 <body class="login login-background">
 <div class="container">
@@ -71,7 +71,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]))
 	<div class="content col2 push2 sheet sheet-page">
 		<div class="row">
 			<div class="content col4 text-center">
-				<a href="#" class="brand-logo">Dream.me</a>
+				<a href="index.php" class="brand-logo">Dream.me</a>
 			</div>
 		</div>
 		<div class="row">
@@ -80,9 +80,12 @@ if (isset($_POST["email"]) && isset($_POST["password"]))
          	</div>
         </div>
 		<form action="login.php" method="post">
+			<span id="error-login"><?php echo isset($errorMessage) ? $errorMessage : null; ?></span>
 			<?php 
 				echo $loginform->input_text('email', isset($_POST['email']) ? $_POST['email'] : null);
+				//ici
 				echo $loginform->input_password('password');
+				//ici
 				echo $loginform->input_checkbox('remember_me', isset($_POST['remember_me']));
 				// echo $loginform->submit('Login');
 				echo "<div><button class='btn waves-effect waves-light' type='submit' name='action'>Login

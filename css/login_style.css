@@ -1,3 +1,8 @@
+#error-login
+{
+	color: red;
+}
+
 .login-background {
 	background: url(../img/bg-img-login.jpg) no-repeat center center fixed;
 	-webkit-background-size: cover;
