@@ -29,23 +29,14 @@ require "bdd_pdo.php";
 		<nav>
 		<div class="nav-wrapper">
 			<a href="#" class="brand-logo">Dream.me</a>
-		<!-- 	<form method="post" action="search.php">
-				<label>Search</label>
-				<input type="text" name="keywords" placeholder="Type the dream name">
-				<input type="submit" value="Search">
-			</div>
-		</form> -->
-		<ul id="nav-mobile" class="right">
-<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
+
+<!-- MENU NORMAL-->
+		<ul class="right hide-on-med-and-down">
+	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
 		<li><a href="search.php"><i class="material-icons">search</i></a></li>
-<!-- ESSAI SEARCH BAR IN NAV BAR -->
-<!-- 		<li><div class="input-field form-inline">
-			<form method="post" action="search.php">
-        	<input id="search" type="search" placeholder="Search for a dream" required>
-     		<i class="material-icons">close</i>
-     		<input type="submit" value="Search">
-     		</form>
-     	</div></li> -->
+	<!-- ICONE CLIQUABLE PANIER-->
+		<li><a href="cart.php"><i class="material-icons">shopping_cart</i></a></li>
+
 		<?php
 		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
 		{
@@ -74,7 +65,47 @@ require "bdd_pdo.php";
 			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
 		}
 
-	?></li></ul></div></nav></div>
+	?></li></ul>
+<!-- UTILISATION DE L'ID mobile-demo POUR ACTIVER LE MENU (en dessous du menu normal)-->
+	<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+<!-- DEBUT MENU HAMBURGER MOBILE-->
+		<ul class="side-nav" id="mobile-demo">
+	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
+		<li><a href="search.php"><i class="material-icons">search</i>Search your dream</a></li>
+	<!-- ICONE CLIQUABLE PANIER-->
+		<li><a href="cart.php"><i class="material-icons">shopping_cart</i>Your shopping cart</a></li>
+
+		<?php
+		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
+		{
+			if (!isset($_SESSION["username"]))
+			{
+				$_SESSION["username"] = $_COOKIE["username"];
+			}
+			$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
+			$isadmin->execute(array(
+				'username' => $_SESSION["username"]));
+			$res = $isadmin->fetch();
+
+		?>><li><?php
+			if ($res["admin"] == '1')
+			{
+				echo "<a href='./admin.php'>Settings [Admin mode]</a>";
+			}
+		?></li><li><?php
+			echo "<a href='./my_account.php'>My account</a>";
+		?></li><li><?php
+			echo "<a href='./logout.php'>Log out</a>";
+		}
+		else 
+		{
+			?></li><li><?php
+			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
+		}
+		?>
+	</li></ul>
+<!-- FIN MENU HAMBURGER MOBILE-->
+	</div></nav></div>
 	</header>
 
 <div class="parallax-container">
@@ -141,6 +172,20 @@ require "bdd_pdo.php";
       $('.parallax').parallax();
     });
         </script>
+
+		<!--Materializecss mobile sidemenu JS script-->
+		<script>
+     		$(".button-collapse").sideNav();
+        </script>
+
+        <style>
+        	#sidenav-overlay
+        	{
+        		z-index: -1;
+        	}
+
+        </style>
+        
     
 </body>
 </html>

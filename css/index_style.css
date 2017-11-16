@@ -7,7 +7,7 @@ nav .brand-logo {
 	font-family: 'Pacifico', cursive;
 	color: #36597d;
 	font-size: 35px;
-	margin-left: 35px;
+	padding-left: 25px;
 }
 
 .nav-wrapper {
@@ -25,6 +25,20 @@ nav ul a{
 .btn {
 	color: black;
 	background-color: #ffbb33;
+}
+
+.navbar-fixed .nav-wrapper > ul > li > a:hover {
+  color: white;
+  background-color: #36597d;
+}
+
+nav .button-collapse {
+	float: right;
+}
+
+nav a {
+	color: #36597d;
+
 }
 
 img {
