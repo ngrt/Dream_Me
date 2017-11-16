@@ -9,36 +9,8 @@
 	font-size: 35px;
 }
 
-.container {
-	display: flex;    
-	flex-direction: row;
-	margin-top: 20px;
-}
-
 .nav-wrapper {
 	background-color: black;
-}
-
-.element-center {
-	flex: 1;
- 	display: flex;
-	justify-content: center;
-}
-
-.element-right {
-	float: right;
-	justify-content: center;
-    align-items: center;
-    color: black;
-}
-
-.img-logo {
-	height: 90px;
-	width: auto;
-}
-.nav-wrapper {
-    height: 30px;
-    line-height: 30px;
 }
 
 .footer {
@@ -50,37 +22,22 @@
 	right: 0;
 }
 
-.carousel .carousel-item {
-	width: 600px !important;
-}
-
 img {
 	max-width:100%;
 }
 
-.dream {
-	width: 300px;
+.space-between {
 	display: flex;
 	justify-content: space-between;
-	flex-wrap: wrap;
+}
+@media only screen and (max-width : 992px) {
+  .parallax img {
+    max-height: 130%; /* or a little bit higher */
+  }
 }
 
-nav i, nav [class^="mdi-"], nav [class*="mdi-"], nav i.material-icons {
-    height: 30px;
-    line-height: 30px;
+@media only screen and (min-width: 993px) {
+  .parallax img {
+    max-height: 170%; /* or higher percentages. It's up to your taste */
+  }
 }
-
-nav .button-collapse i {
-    height: 30px;
-    line-height: 30px;
-}
-
-nav .brand-logo { 
-    font-size: 1.6rem; 
-}
-
-@media only screen and (min-width: 601px){
-    nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
-        height: 30px;
-        line-height: 30px;
-    }

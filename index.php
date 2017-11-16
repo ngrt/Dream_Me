@@ -28,15 +28,16 @@ require "bdd_pdo.php";
 		<div class="navbar">
 		<nav>
 		<div class="nav-wrapper">
+			<a href="#" class="brand-logo">Dream.me</a>
 		<!-- 	<form method="post" action="search.php">
 				<label>Search</label>
 				<input type="text" name="keywords" placeholder="Type the dream name">
 				<input type="submit" value="Search">
 			</div>
 		</form> -->
-		<ul id="nav-mobile" class="right hide-on-med-and-down">
+		<ul id="nav-mobile" class="right">
 <!-- ICONE CLIQUABLE SEARCH NAVBAR-->
-		<!-- <li><a href="search.php"><i class="material-icons">search</i></a></li> -->
+		<li><a href="search.php"><i class="material-icons">search</i></a></li>
 <!-- ESSAI SEARCH BAR IN NAV BAR -->
 <!-- 		<li><div class="input-field form-inline">
 			<form method="post" action="search.php">
@@ -73,46 +74,14 @@ require "bdd_pdo.php";
 		}
 
 	?></li></ul></div></nav></div>
-<div class="container">
-	<div class="element-center">
-		<a href="#" class="brand-logo">DREAM.me</a>
-	</div>
-		<ul id="nav-mobile" class="right hide-on-med-and-down">
-<!-- ICONE CLIQUABLE -->
-		<li><a href="search.php"><i class="material-icons element-right">search</i></a></li>
-		</ul>
-</div>
 	</header>
 
-<!-- 	CAROUSEL -->
-	<div class="carousel">
-	    <a class="carousel-item" href="#one!"><img src="img/slide1.jpg"></a>
-	    <a class="carousel-item" href="#two!"><img src="img/slide2.jpg"></a>
-	    <a class="carousel-item" href="#three!"><img src="img/slide3.jpg"></a>
-	</div>
+<div class="parallax-container">
+    <div class="parallax"><img src="img/slide1.jpg"></div>
+  </div>
 
-<!-- 	SLIDER -->
-		<!-- <div class="slider">
-			<ul class="slides">
-				<li>
-					<img src="img/slide1.jpg">
-					<div class="caption center-align">
-        				<h3>TROLOLO</h3>
-      		   			<h5 class="light grey-text text-lighten-3">Super rêve ici testez le tmtc.</h5>
-        			</div>
-      			</li>
-      			<li>
-					<img src="img/slide2.jpg">
-					<div class="caption center-align">
-        				<h3>TITRE COOL ICI</h3>
-      		   			<h5 class="light grey-text text-lighten-3">Super rêve ici testez le tmtc.</h5>
-        			</div>
-      			</li>
-			</ul>
-		</div> -->
-
-
-<div class="container"><?php
+<div class="section white">
+	<div class="row container"><?php
 
 // Affichage tableau avec produits avec un maximum de produits par page défini par :
 	$results_per_page = 3;
@@ -126,7 +95,14 @@ require "bdd_pdo.php";
 	while($dream = $result->fetch()) {
 	?>
 <!-- REQUETES SUR LES IMAGES STOCKEES DANS IMG SRC-->
-	<div class="dream"><a href="product.php?product=<?php echo $dream['name'] ?>"><img src="img/slide1.jpg"><?php echo $dream['name'] ?></a></div>
+	<div class="col s12 m6 l4">
+		<div class="card">
+            <div class="card-image">
+              	<a href="product.php?product=<?php echo $dream['name'] ?>"><img src="img/slide1.jpg"><span class="card-title"><?php echo $dream['name'] ?></span>
+              </a>
+          	</div>
+        </div>
+    </div>
 	<?php  
 	}; ?>
 
@@ -148,24 +124,18 @@ require "bdd_pdo.php";
 		</ul>
 	</footer>
 	</div>
+</div>
 	<!--Import jQuery before materialize.js-->
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
         <!-- Compiled and minified JavaScript -->
  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
           
-        <!--Materializecss Slider-->
-       <!--  <script>
-            $(document).ready(function () {
-                $('.slider').slider({full_width: true});
-            });
-        </script> -->
-        
+        <!--Materializecss Parallax JS script-->
      	<script>
-     		$(document).ready(function(){
-      $('.carousel').carousel();
+     		 $(document).ready(function(){
+      $('.parallax').parallax();
     });
-            $('.carousel.carousel-slider').carousel({fullWidth: true});
         </script>
     
 </body>
