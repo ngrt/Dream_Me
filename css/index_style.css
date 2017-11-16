@@ -3,41 +3,38 @@
 	vertical-align: middle;
 }*/
 
-.brand-logo {
+nav .brand-logo {
 	font-family: 'Pacifico', cursive;
-	color: black;
+	color: #36597d;
 	font-size: 35px;
+	margin-left: 35px;
 }
 
 .nav-wrapper {
-	background-color: black;
+	background-color: white;
 }
 
-.footer {
-	display: flex;
-	justify-content: center;
-	position: absolute;
-	bottom: 0; 
-	left: 0; 
-	right: 0;
+nav .nav-wrapper {
+	padding-right: 50px;
+}
+
+nav ul a{
+	color: black;
+}
+
+.btn {
+	color: black;
+	background-color: #ffbb33;
 }
 
 img {
-	max-width:100%;
+	max-width:auto
 }
 
-.space-between {
-	display: flex;
-	justify-content: space-between;
-}
-@media only screen and (max-width : 992px) {
-  .parallax img {
-    max-height: 130%; /* or a little bit higher */
-  }
+.pagination {
+	text-align: center;
 }
 
-@media only screen and (min-width: 993px) {
-  .parallax img {
-    max-height: 170%; /* or higher percentages. It's up to your taste */
-  }
+.parallax-container {
+	margin-bottom: 20px;
 }

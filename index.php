@@ -25,7 +25,7 @@ require "bdd_pdo.php";
 <body>
 
 	<header>
-		<div class="navbar">
+		<div class="navbar-fixed">
 		<nav>
 		<div class="nav-wrapper">
 			<a href="#" class="brand-logo">Dream.me</a>
@@ -46,7 +46,6 @@ require "bdd_pdo.php";
      		<input type="submit" value="Search">
      		</form>
      	</div></li> -->
-		<li>
 		<?php
 		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
 		{
@@ -54,9 +53,6 @@ require "bdd_pdo.php";
 			{
 				$_SESSION["username"] = $_COOKIE["username"];
 			}
-			echo "<a href='./logout.php'>Log out</a>";
-		?></li><li><?php
-			echo "<a href='./my_account.php'>My account</a>";
 			$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
 			$isadmin->execute(array(
 				'username' => $_SESSION["username"]));
@@ -67,10 +63,15 @@ require "bdd_pdo.php";
 			{
 				echo "<a href='./admin.php'>Settings [Admin mode]</a>";
 			}
+		?></li><li><?php
+			echo "<a href='./my_account.php'>My account</a>";
+		?></li><li><?php
+			echo "<a href='./logout.php'>Log out</a>";
 		}
 		else 
 		{
-			echo "<a href='./login.php'>Log in - Sign in</a>";
+			?></li><li><?php
+			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
 		}
 
 	?></li></ul></div></nav></div>
@@ -80,7 +81,6 @@ require "bdd_pdo.php";
     <div class="parallax"><img src="img/slide1.jpg"></div>
   </div>
 
-<div class="section white">
 	<div class="row container"><?php
 
 // Affichage tableau avec produits avec un maximum de produits par page défini par :
@@ -95,8 +95,8 @@ require "bdd_pdo.php";
 	while($dream = $result->fetch()) {
 	?>
 <!-- REQUETES SUR LES IMAGES STOCKEES DANS IMG SRC-->
-	<div class="col s12 m6 l4">
-		<div class="card">
+	<div class="row col s12 m6 l4">
+		<div class="card z-depth-3">
             <div class="card-image">
               	<a href="product.php?product=<?php echo $dream['name'] ?>"><img src="img/slide1.jpg"><span class="card-title"><?php echo $dream['name'] ?></span>
               </a>
@@ -104,9 +104,9 @@ require "bdd_pdo.php";
         </div>
     </div>
 	<?php  
-	}; ?>
+	}; ?> </div>
 
-	<footer class="footer">
+	
 		<?php
 		// Pagination
 		$req = "SELECT COUNT(ID) AS totalprod FROM products";
@@ -114,7 +114,9 @@ require "bdd_pdo.php";
 		$count = $result->fetch(PDO::FETCH_ASSOC);
 		$total_pages = ceil($count["totalprod"] / $results_per_page);
 
-		?><ul class="pagination"><?php
+		?>
+		<div class="row">
+		<ul class="pagination"><?php
 
 		for ($i=1; $i<=$total_pages; $i++) {
 			//if ($i == $page) 
@@ -122,7 +124,9 @@ require "bdd_pdo.php";
 		};
 		?>
 		</ul>
-	</footer>
+	</div>
+<footer>
+</footer>
 	</div>
 </div>
 	<!--Import jQuery before materialize.js-->
