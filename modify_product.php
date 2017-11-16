@@ -42,6 +42,61 @@ else
 	header("Location : admin.php", true, 301);
 }
 
+$sql = "SELECT * FROM categories";
+
+$categories_req = $bdd->query($sql);
+
+$data = $categories_req->fetchAll();
+
+function buildTree(array &$elements, $parentId = 0) {
+
+    $branch = array();
+
+    foreach ($elements as &$element) {
+
+        if ($element['parent_id'] == $parentId) {
+            $children = buildTree($elements, $element['id']);
+            if ($children) {
+                $element['children'] = $children;
+            }
+            $branch[$element['id']] = $element;
+            unset($element);
+        }
+    }
+    return $branch;
+}
+
+function printTree($tree, $r = 0, $p = null) {
+
+    foreach ($tree as $i => $t) {
+        $dash = ($t['parent_id'] == 0) ? '' : str_repeat('-', $r) .' ';
+
+        printf("\t<option value='%d'>%s%s</option>\n", $t['id'], $dash, $t['name']);
+
+        if (isset($t['children'])) {
+            printTree($t['children'], $r+1, $t['parent_id']); 
+        }
+    }
+}
+
+function recursiveCategories($array) {
+
+    if (count($array)) {
+            echo "\n<ul>\n";
+        foreach ($array as $vals) {
+
+                    echo "<li id=\"".$vals['name']."\">".$vals['name'];
+                    if (isset($vals['children'])) {
+                            recursiveCategories($vals['children']);
+                    }
+                    echo "</li>\n";
+        }
+            echo "</ul>\n";
+    }
+} 
+
+$tree = buildTree($data);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -58,10 +113,18 @@ else
 				echo $form_modify_product->input_text('price', $product->get_price());
 				if (isset($subError['price']))
 					echo $subError['price'];
-				echo $form_modify_product->input_text('category_id', $product->get_category_id());
+				?>
+				<label>Category id</label>
+				<select name="category_id"> 
+					<option value="all">All</option>
+			<?php
+						printTree($tree);
+			?>
+				</select>
+			<?php
 				if (isset($subError['category_id']))
 					echo $subError['category_id'];
-				echo $form_modify_product->submit('Envoyer');
+				echo $form_modify_product->submit('Modify');
 			?>
 		</form>
 	</div>

@@ -34,7 +34,6 @@ if (isset($_POST["keywords"]))
 			if ($_POST["price_sort"] == 'high')
 			{ 
 			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " ORDER BY price DESC";
-			var_dump($sql);
 			}
 			else
 			{
@@ -75,6 +74,63 @@ if (isset($_POST["keywords"]))
 	}
 
 }
+
+$sql = "SELECT * FROM categories";
+
+$categories_req = $bdd->query($sql);
+
+$data = $categories_req->fetchAll();
+
+function buildTree(array &$elements, $parentId = 0) {
+
+    $branch = array();
+
+    foreach ($elements as &$element) {
+
+        if ($element['parent_id'] == $parentId) {
+            $children = buildTree($elements, $element['id']);
+            if ($children) {
+                $element['children'] = $children;
+            }
+            $branch[$element['id']] = $element;
+            unset($element);
+        }
+    }
+    return $branch;
+}
+
+function printTree($tree, $r = 0, $p = null) {
+
+    foreach ($tree as $i => $t) {
+        $dash = ($t['parent_id'] == 0) ? '' : str_repeat('-', $r) .' ';
+
+        printf("\t<option value='%d'>%s%s</option>\n", $t['id'], $dash, $t['name']);
+
+        if (isset($t['children'])) {
+            printTree($t['children'], $r+1, $t['parent_id']); 
+        }
+    }
+}
+
+function recursiveCategories($array) {
+
+    if (count($array)) {
+            echo "\n<ul>\n";
+        foreach ($array as $vals) {
+
+                    echo "<li id=\"".$vals['name']."\">".$vals['name'];
+                    if (isset($vals['children'])) {
+                            recursiveCategories($vals['children']);
+                    }
+                    echo "</li>\n";
+        }
+            echo "</ul>\n";
+    }
+} 
+
+$tree = buildTree($data);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -111,18 +167,12 @@ if (isset($_POST["keywords"]))
 			<p>
 				<label>Sort by category</label>
 				<select name="category_id"> 
-				<option value="all" <?php echo (isset($_POST["category_id"]) && $_POST["category_id"] == "all") ? "selected" : ""; ?>>All</option>
-				<?php
-					while ($data = $categories->fetch())
-					{
-						array_push($categories_name, $data["cat_name"]);
-				?>
-						<option value=<?php echo $data["id"]; ?> <?php echo (isset($_POST["category_id"]) && $_POST["category_id"] == $data["id"]) ? "selected" : ""; ?>><?php echo $data["cat_name"] ?></option>
-				<?php
-					}
-				?>
-			</select>
-				
+					<option value="all">All</option>
+			<?php
+				printTree($tree);
+			?>
+
+				</select>
 			</p>
 			<input type="submit" value="Search">
 		</form>

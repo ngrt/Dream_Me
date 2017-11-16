@@ -27,15 +27,64 @@ $sql = 'SELECT * FROM users WHERE username != "' . $_SESSION["username"] . '"';
 
 $request_all_users = $bdd->query($sql);
 
-$sql = 'SELECT * FROM products';
+$sql = 'SELECT products.id AS id, products.name AS name, products.price AS price, categories.name as category FROM products JOIN categories ON categories.id = products.category_id';
 
 $request_all_products = $bdd->query($sql);
 
-$sql = 'SELECT * FROM categories';
+$sql = "SELECT * FROM categories";
 
-$request_all_categories = $bdd->query($sql);
+$categories_req = $bdd->query($sql);
 
-$id_categories = [];
+$data = $categories_req->fetchAll();
+
+function buildTree(array &$elements, $parentId = 0) {
+
+    $branch = array();
+
+    foreach ($elements as &$element) {
+
+        if ($element['parent_id'] == $parentId) {
+            $children = buildTree($elements, $element['id']);
+            if ($children) {
+                $element['children'] = $children;
+            }
+            $branch[$element['id']] = $element;
+            unset($element);
+        }
+    }
+    return $branch;
+}
+
+function printTree($tree, $r = 0, $p = null) {
+
+    foreach ($tree as $i => $t) {
+        $dash = ($t['parent_id'] == 0) ? '' : str_repeat('-', $r) .' ';
+
+        printf("\t<option value='%d'>%s%s</option>\n", $t['id'], $dash, $t['name']);
+
+        if (isset($t['children'])) {
+            printTree($t['children'], $r+1, $t['parent_id']); 
+        }
+    }
+}
+
+function recursiveCategories($array) {
+
+    if (count($array)) {
+            echo "\n<ul>\n";
+        foreach ($array as $vals) {
+
+                    echo "<li id=\"".$vals['name']."\">".$vals['name'];
+                    if (isset($vals['children'])) {
+                            recursiveCategories($vals['children']);
+                    }
+                    echo "</li>\n";
+        }
+            echo "</ul>\n";
+    }
+} 
+
+$tree = buildTree($data);
 
 ?>
 
@@ -138,7 +187,16 @@ $id_categories = [];
 				echo $form_create_product->input_text('price', isset($_POST['price']) ? $_POST['price'] : null);
 				if (isset($_SESSION['errors']['price']))
 					echo $_SESSION['errors']['price'];
-				echo $form_create_product->input_text('category_id', isset($_POST['category_id']) ? $_POST['category_id'] : null);
+			?>
+				<label>Category id</label>
+				<select name="category_id"> 
+					<option value="all">All</option>
+			<?php
+						printTree($tree);
+			?>
+				</select>
+			<?php
+				//echo $form_create_product->input_text('category_id', isset($_POST['category_id']) ? $_POST['category_id'] : null);
 				if (isset($_SESSION['errors']['category_id']))
 					echo $_SESSION['errors']['category_id'];
 				echo $form_create_product->submit('Create a product');
@@ -157,7 +215,7 @@ $id_categories = [];
 				<th>ID</th>
 				<th>Name</th>
 				<th>Price ($)</th>
-				<th>Category_id</th>
+				<th>Category</th>
 				<th>Modify</th>
 				<th>Delete</th>
 			</tr>
@@ -169,7 +227,7 @@ $id_categories = [];
 				<td><?php echo $data["id"]; ?></td>
 				<td><?php echo $data["name"]; ?></td>
 				<td><?php echo $data["price"]; ?></td>
-				<td><?php echo $data["category_id"]; ?></td>
+				<td><?php echo $data["category"]; ?></td>
 				<td><a href="modify_product.php?id=<?php echo $data["id"]; ?>">X</a></td>
 				<td><a href="delete_product.php?id=<?php echo $data["id"]; ?>">X</a></td>
 			</tr>
@@ -184,60 +242,6 @@ $id_categories = [];
 <div class="categories-management">
 	<h1>Category Management</h1>
 	<?php 
-		$sql = "SELECT * FROM categories";
-
-		$categories_req = $bdd->query($sql);
-
-		$data = $categories_req->fetchAll();
-
-		function buildTree(array &$elements, $parentId = 0) {
-
-		    $branch = array();
-
-		    foreach ($elements as &$element) {
-
-		        if ($element['parent_id'] == $parentId) {
-		            $children = buildTree($elements, $element['id']);
-		            if ($children) {
-		                $element['children'] = $children;
-		            }
-		            $branch[$element['id']] = $element;
-		            unset($element);
-		        }
-		    }
-		    return $branch;
-		}
-
-		function printTree($tree, $r = 0, $p = null) {
-
-		    foreach ($tree as $i => $t) {
-		        $dash = ($t['parent_id'] == 0) ? '' : str_repeat('-', $r) .' ';
-
-		        printf("\t<option value='%d'>%s%s</option>\n", $t['id'], $dash, $t['name']);
-
-		        if (isset($t['children'])) {
-		            printTree($t['children'], $r+1, $t['parent_id']); 
-		        }
-		    }
-		}
-
-		function recursiveCategories($array) {
-
-		    if (count($array)) {
-		            echo "\n<ul>\n";
-		        foreach ($array as $vals) {
-
-		                    echo "<li id=\"".$vals['name']."\">".$vals['name'];
-		                    if (isset($vals['children'])) {
-		                            recursiveCategories($vals['children']);
-		                    }
-		                    echo "</li>\n";
-		        }
-		            echo "</ul>\n";
-		    }
-		} 
-
-		$tree = buildTree($data);
 
 		recursiveCategories($tree);
 	?>
