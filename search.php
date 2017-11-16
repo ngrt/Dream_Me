@@ -80,10 +80,16 @@ if (isset($_POST["keywords"]))
 <!DOCTYPE html>
 <html>
 <head>
+	<!-- css Materialize -->
+<!-- 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"> -->
+
+	<!-- css Materialize - icons -->
+	<!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
+
 	<title>Search - Dream.me</title>
 </head>
 <body>
-
+<div class="nav-wrapper">
 	<div class="search">
 		<form method="post" action="search.php">
 			<label>Search</label>
@@ -121,6 +127,7 @@ if (isset($_POST["keywords"]))
 			<input type="submit" value="Search">
 		</form>
 	</div>
+</div>
 	<div class="result">
 		
 		<?php
