@@ -24,19 +24,68 @@ require "bdd_pdo.php";
 	<title>Home - Dream.me</title>
 </head>
 <body>
-
 	<header>
+
 		<div class="navbar-fixed">
 		<nav>
+
 		<div class="nav-wrapper">
 			<a href="#" class="brand-logo">Dream.me</a>
+	<?php 
 
+		function arrayToRange($arr)
+		{
+			$str = "(";
+
+			for ($i=0; $i < count($arr) ; $i++) { 
+				$str .= $arr[$i];
+
+				if ($i == count($arr) - 1)
+				{
+					$str .= ")";
+				}
+				else
+				{
+					$str .= ",";
+				}
+			}
+			return $str;
+		}
+
+		if (isset($_SESSION["cart"]))
+		{
+
+			$sql = "SELECT name, price FROM products WHERE id IN " . arrayToRange($_SESSION["cart"]);
+			//echo $sql;
+			$itemsInCard = $bdd->query($sql);
+	?>
+
+	<ul id="dropdown2" class="dropdown-content" style="min-width: 250px; margin-top: 5%; padding: 2%">
+	<?php
+		$sum = 0;
+		while ($item = $itemsInCard->fetch()) 
+		{
+	?>
+			<li><?php echo $item['name'] . " " . $item['price'] . "$"; ?></li>
+	<?php
+		$sum += $item['price'];
+		}
+	
+	 ?>
+	  <li class="divider"></li>
+	  <li><?php echo "Total " . $sum . "$";?></li>
+	  <li><a class="waves-effect waves-light btn" href="#">Order now</a></li>
+	</ul>
+
+	<?php 
+		} 
+	?>
 <!-- MENU NORMAL-->
 		<ul class="right hide-on-med-and-down">
 	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
 		<li><a href="search.php"><i class="material-icons">search</i></a></li>
 	<!-- ICONE CLIQUABLE PANIER-->
-		<li><a href="cart.php"><i class="material-icons">shopping_cart</i></a></li>
+		<li><a class="dropdown-button" href="#!" data-activates="dropdown2"><i class="material-icons">shopping_cart</i></a></li>
 
 		<?php
 		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
@@ -66,7 +115,10 @@ require "bdd_pdo.php";
 			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
 		}
 
-	?></li></ul>
+	?>
+		
+	</li>
+</ul>
 <!-- UTILISATION DE L'ID mobile-demo POUR ACTIVER LE MENU (en dessous du menu normal)-->
 	<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 <!-- DEBUT MENU HAMBURGER MOBILE-->
@@ -74,7 +126,39 @@ require "bdd_pdo.php";
 	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
 		<li><a href="search.php"><i class="material-icons">search</i>Search your dream</a></li>
 	<!-- ICONE CLIQUABLE PANIER-->
-		<li><a href="cart.php"><i class="material-icons">shopping_cart</i>Your shopping cart</a></li>
+
+	<?php
+	if (isset($_SESSION["cart"]))
+		{
+
+			$sql = "SELECT name, price FROM products WHERE id IN " . arrayToRange($_SESSION["cart"]);
+			//echo $sql;
+			$itemsInCard = $bdd->query($sql);
+	?>
+
+	<ul id="dropdown3" class="dropdown-content" style="min-width: 250px; margin-top: 5%; padding: 2%">
+	<?php
+		$sum = 0;
+		while ($item = $itemsInCard->fetch()) 
+		{
+	?>
+			<li><?php echo $item['name'] . " " . $item['price'] . "$"; ?></li>
+	<?php
+		$sum += $item['price'];
+		}
+	
+	 ?>
+	  <li class="divider"></li>
+	  <li><?php echo "Total " . $sum . "$";?></li>
+	  <li><a class="waves-effect waves-light btn" href="#">Order now</a></li>
+	</ul>
+
+	<?php 
+		} 
+	?>
+
+
+		<li><a class="dropdown-button" data-activates="dropdown3" href="#"><i class="material-icons">shopping_cart</i>Your shopping cart</a></li>
 
 		<?php
 		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
@@ -129,7 +213,6 @@ require "bdd_pdo.php";
 		while($dream = $result->fetch()) {
 			$i++;
 	?>
-	
 <!-- FAUT FAIRE : REQUETES SUR LES IMAGES STOCKEES DANS IMG SRC-->
 	<div class="row col s12 m6 l4 align-them">
 		<a class="modal-trigger" href="#modal<?php echo $i ?>">
@@ -142,7 +225,7 @@ require "bdd_pdo.php";
           	<div id="modal<?php echo $i ?>" class="modal">
           		<div class="modal-content">
           			<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat" style="float: right;">Close</a>
-					<a href="cart.php" class="modal-action modal-close waves-effect waves-green btn" style="float: right;">Add to shopping cart</a>
+					<a href=<?php echo "cart.php?id=" . $dream["id"]; ?> class="modal-action modal-close waves-effect waves-green btn" style="float: right;">Add to shopping cart</a>
 
 					<h4><?php echo $dream['price'] ?> $</h4>
 				</div>
@@ -233,7 +316,15 @@ require "bdd_pdo.php";
         </script>
         
 
-        
+        <script>
+        	$(document).ready(function()
+        	{
+        	    $('.dropdown-button').dropdown();
+        		{ hover: true }	
+        	});
+
+
+        </script>
     
 </body>
 </html>
