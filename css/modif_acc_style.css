@@ -48,16 +48,16 @@
     width: 380px;
 }
 
-/*#space-grid {
+#space-grid {
 	width: 35%;
 	margin: 1%;
 }
-*/
-/*.row {
+
+.row {
 	padding-left: 19%;
 	padding-top: 5%;
 }
-*/
+
 form {
 	padding: 5%;
 }

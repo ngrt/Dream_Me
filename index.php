@@ -125,20 +125,21 @@ require "bdd_pdo.php";
 
 	$sql = "SELECT * FROM products ORDER BY ID DESC LIMIT $start_from, ".$results_per_page;
 	$result = $bdd->query($sql); 
-
+	$i = 0;
 		while($dream = $result->fetch()) {
+			$i++;
 	?>
-
+	
 <!-- FAUT FAIRE : REQUETES SUR LES IMAGES STOCKEES DANS IMG SRC-->
 	<div class="row col s12 m6 l4 align-them">
-		<a class="modal-trigger" href="#modal1">
-		<div class="card z-depth-3">
+		<a class="modal-trigger" href="#modal<?php echo $i ?>">
+		<div class="card small z-depth-3">
             <div class="card-image">
               	<img src="<?php echo $dream['imgurl']; ?>"/>
               	<span class="card-title"><?php echo $dream['name'] ?></span> 
           	</div>
 		</a>
-          	<div id="modal1" class="modal">
+          	<div id="modal<?php echo $i ?>" class="modal">
           		<div class="modal-content">
           			<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat" style="float: right;">Close</a>
 					<a href="cart.php" class="modal-action modal-close waves-effect waves-green btn" style="float: right;">Add to shopping cart</a>
@@ -213,6 +214,15 @@ require "bdd_pdo.php";
      		$(".button-collapse").sideNav();
         </script>
 
+
+        <style>
+        	#sidenav-overlay
+        	{
+        		z-index: -1;
+        	}
+
+        </style>
+        
 		<!-- Materializecss pop-up cards -->
 		<script>
      		$(document).ready(function(){
@@ -223,13 +233,6 @@ require "bdd_pdo.php";
         </script>
         
 
-        <style>
-        	#sidenav-overlay
-        	{
-        		z-index: -1;
-        	}
-
-        </style>
         
     
 </body>

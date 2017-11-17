@@ -105,7 +105,7 @@ if (isset($_GET["id"]))
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
 	<!-- css local -->
 	<link rel="stylesheet" href="css/index_style.css">
-	<link rel="stylesheet" href="css/account_style.css">
+	<link rel="stylesheet" href="css/modif_acc_style.css">
 
 	
 	<!--Let browser know website is optimized for mobile-->
@@ -201,7 +201,7 @@ if (isset($_GET["id"]))
 <div class="row sign-in">
 	<!-- <div class="content col2 push2 sheet sheet-page"> -->
 
-	<div class="col s6 col2 push2 content sheet sheet-page" id="space-grid">
+	<div class="col s12 l6 col2 push2 content sheet sheet-page" id="space-grid">
 	<form action=<?php echo "modify_account.php?id=" . $id; ?> method='post'>
 		<?php 	
 			echo $modify_email->input_text('new_email', isset($_POST['new_email']) ? $_POST['new_email'] : $email);
@@ -218,7 +218,7 @@ if (isset($_GET["id"]))
 		?>
 	</form> 
 	</div>
-	<div class="col s6 col2 push2 content sheet sheet-page" id="space-grid">
+	<div class="col s12 l6 col2 push2 content sheet sheet-page" id="space-grid">
 	<form action=<?php echo "modify_account.php?id=" . $id; ?> method='post'>
 		
 		<?php 

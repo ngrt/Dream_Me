@@ -143,7 +143,6 @@ $tree = buildTree($data);
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<!-- css local -->
 	<link rel="stylesheet" href="css/index_style.css">
-	<link rel="stylesheet" href="css/form_style.css">
 	
 	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
 
@@ -153,12 +152,12 @@ $tree = buildTree($data);
 	<meta charset="UTF-8">
 	<title>Search - Dream.me</title>
 </head>
-<body>
+<body class="search-background">
 	<header>
 		<div class="navbar-fixed">
 		<nav>
 		<div class="nav-wrapper">
-			<a href="#" class="brand-logo">Dream.me</a>
+			<a href="index.php" class="brand-logo">Dream.me</a>
 
 <!-- MENU NORMAL-->
 		<ul class="right hide-on-med-and-down">
@@ -238,7 +237,8 @@ $tree = buildTree($data);
 	</div></nav></div>
 	</header>
 <div class="container">
-	<div class="search row">
+	<div class="content col2 push2 sheet sheet-page">
+<!-- 		<div class="search row"> -->
 		<form method="post" action="search.php">
 			<label>Search</label>
 			<input type="text" name="keywords" placeholder="Type the dream name" value=<?php echo isset($_POST["keywords"]) ? $_POST["keywords"] : null; ?>>
@@ -250,7 +250,6 @@ $tree = buildTree($data);
 			</p>
 		-->
 
-		
 				<p>
 				<label>Sort by price</label>
 				<input type="radio" name="price_sort" id="radio1" value="high" <?php echo (isset($_POST["price_sort"]) && $_POST["price_sort"] == "high") ? "checked" : ""; ?>><label for="radio1">High to low</label>
@@ -277,36 +276,102 @@ $tree = buildTree($data);
 		</form>
 	</div>
 </div>
-	<div class="result">
+	
 		
 		<?php
 			if ($_POST)
 			{
-		?>
-				<p>Found <?php echo $count; ?> result(s)</p>
+
+				$request = "SELECT * FROM products";
+				$prod_req = $bdd->query($request);
+
+				$request2 = "SELECT name FROM categories";
+				$cat_req = $bdd->query($request2);
+				
+		?>		
+				
+			<div class="container">
+				<p class="found">Found <?php echo $count; ?> result(s)</p>
+				<div class="row">
 		<?php
 				if ($count != 0)
 			{
-				while ($data = $result_name->fetch(PDO::FETCH_ASSOC))
+				$i = 0;
+				while ($data = $result_name->fetch(PDO::FETCH_ASSOC) && $prodinfo = $prod_req->fetch())
 				{
-			?>
-					<h2><?php echo $data["name"] ;?></h2>
-					<p>Price : <?php echo $data["price"] ;?>$</p>
-					<p>Category : <?php echo $data["cat_name"] ;?></p>
+					$i++;
+					
+			?>	
+
+						<div class="col s12 m6 l4">
+						<a class="modal-trigger" href="#modal<?php echo $i ?>">
+							<div class="card small z-depth-3">
+	        			    <div class="card-image">
+	        			    	<img src="<?php echo $prodinfo['imgurl']; ?>"/>
+						<span class="card-title"><?php echo $prodinfo["name"] ;?></span>
+							</div>
+			
+							<div class="card-content">
+						<p>Price : <?php echo $prodinfo["price"] ;?>$</p>
+						<p>Category : <?php $catinfo = $cat_req->fetch(); echo $catinfo['name']; ?></p></a>
+							</div>
+						</a>
+						</div>
+					</div>
+
+				<div id="modal<?php echo $i ?>" class="modal">
+	          		<div class="modal-content">
+	          			<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat" style="float: right;">Close</a>
+						<a href="cart.php" class="modal-action modal-close waves-effect waves-green btn" style="float: right;">Add to shopping cart</a>
+
+						<h4><?php echo $prodinfo['price'] ?> $</h4>
+					</div>
+					<div class="modal-content">
+						<h4><?php echo $prodinfo['name'] ?></h4>
+						<p><?php echo $prodinfo['description'] ?></p>
+					</div>
+					<div class="modal-content">
+						<div class="card-image">  
+		              	<img src="<?php echo $prodinfo['imgurl'] ?>"/>
+		              </div>
+	        	</div>	
+        </div> 
 			<?php
 				}
 			}
 			}
-			
-		?>
-
+		 ?>
+</div></div>
 	</div>
 <!--Import jQuery before materialize.js-->
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
         <!-- Compiled and minified JavaScript -->
  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+ 		<!-- Materializecss pop-up cards -->
+		<script>
+     		$(document).ready(function(){
+		    // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+		    $('.modal').modal();
+		    $('.trigger-modal').modal();
+		  });
+        </script>
           
+<!--Materializecss mobile sidemenu JS script-->
+		<script>
+     		$(".button-collapse").sideNav();
+        </script>
+
+
+        <style>
+        	#sidenav-overlay
+        	{
+        		z-index: -1;
+        	}
+
+        </style>
+
 <!-- SCRIPT JS POUR MATERIALIZE SELECT -->
 	<script>
          $(document).ready(function() {
