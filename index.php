@@ -214,12 +214,14 @@ require "bdd_pdo.php";
 			$i++;
 	?>
 <!-- FAUT FAIRE : REQUETES SUR LES IMAGES STOCKEES DANS IMG SRC-->
-	<div class="row col s12 m6 l4 align-them">
+	<div class="row col s12 m6 l4">
 		<a class="modal-trigger" href="#modal<?php echo $i ?>">
-		<div class="card small z-depth-3">
+		<div class="card z-depth-3">
             <div class="card-image">
               	<img src="<?php echo $dream['imgurl']; ?>"/>
-              	<span class="card-title"><?php echo $dream['name'] ?></span> 
+              	<span class="shadow"></span>
+              	<span class="card-title" style="float: left;"><?php echo $dream['name'] ?><p style="position: absolute;right: 15px;bottom: 0;"><?php echo $dream['price'] ?> $</p> </span>
+
           	</div>
 		</a>
           	<div id="modal<?php echo $i ?>" class="modal">
@@ -268,13 +270,20 @@ require "bdd_pdo.php";
 	<div class="container">
 		<div class="row">
 			<div class="col l6 s12">
-                <h5 class="white-text">Footer Content</h5>
-                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+                <h5 style="font-family: 'Pacifico', cursive;">Dream.me</h5>
+                <p class="grey-text text-lighten-4">You can finally buy what you can't have in real life. Success, money, love; all you can dream is on our website. Don't waste your night time in shitty dreams. Buy yourself the best, because you deserve it. Dream it!</p>
             </div>
             <div class="col l4 offset-l2 s12">
-                <h5 class="white-text">Links</h5>
-                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
-		</div>
+                <h5 style="font-family: 'Pacifico', cursive;">About us</h5>
+                <p class="grey-text text-lighten-4">Noufel Gouirhate  >  
+                noufel.gouirhate@gmail.com</p>
+					
+				<p class="grey-text text-lighten-4">Catherine Chen  >  
+                catherine.chen@hotmail.fr</p>
+
+                <h5 style="font-family: 'Pacifico', cursive; color: #ffbb33;">Website Dreamed by Cath & Nouf</h5>
+
+        </div>
 	</div>
 </footer>
 	</div>

@@ -2,9 +2,37 @@ ul.dropdown-content {
 	min-width: 250px;
 }
 
+.card .card-image img {
+	bottom: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card .card-image .card-title {
+	width: 100%;
+}
+
+.card-image {
+	height: 274px;
+	overflow: hidden;
+}
+
+.card.small {
+    height: 350px;
+}
 
 .white-text {
 	font-family: 'Roboto' !important;
+}
+
+.shadow {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.2);
 }
 
 div {
@@ -16,12 +44,6 @@ nav .brand-logo {
 	color: #36597d;
 	font-size: 35px;
 	padding-left: 25px;
-}
-
-.align-them {
-	display: flex;
-	flex-flow: row wrap;
-	justify-content: space-around;
 }
 
 .modal.open {
