@@ -33,15 +33,15 @@ if (isset($_POST["keywords"]))
 		{
 			if ($_POST["price_sort"] == 'high')
 			{ 
-			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " ORDER BY price DESC";
+			$sql = "SELECT products.id AS id, products.name, price, categories.name AS cat_name, imgurl FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " ORDER BY price DESC";
 			}
 			else
 			{
-			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " ORDER BY price";
+			$sql = "SELECT products.id AS id, products.name, price, categories.name AS cat_name, imgurl FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " ORDER BY price";
 			}
 		}else
 		{
-			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST);
+			$sql = "SELECT products.id AS id, products.name, price, categories.name AS cat_name, imgurl FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST);
 		}
 	}else
 	{
@@ -49,15 +49,15 @@ if (isset($_POST["keywords"]))
 		{
 			if ($_POST["price_sort"] == 'high')
 			{
-				$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%' ORDER BY price";
+				$sql = "SELECT products.id AS id, products.name, price, categories.name AS cat_name, imgurl FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%' ORDER BY price";
 			}
 			else
 			{
-				$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%' ORDER BY price DESC";
+				$sql = "SELECT products.id AS id, products.name, price, categories.name AS cat_name, imgurl FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%' ORDER BY price DESC";
 			}
 		}else
 		{
-			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%'";
+			$sql = "SELECT products.id AS id, products.name, price, categories.name AS cat_name, imgurl FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%'";
 		}
 	}
 
@@ -277,28 +277,30 @@ $tree = buildTree($data);
 		</form>
 	</div>
 </div>
-	
-		
-		<?php
-			if ($_POST)
-			{
-
-				$request = "SELECT * FROM products";
-				$prod_req = $bdd->query($request);
-
-				$request2 = "SELECT name FROM categories";
-				$cat_req = $bdd->query($request2);
-				
-		?>		
 				
 			<div class="container">
-				<p class="found">Found <?php echo $count; ?> result(s)</p>
+			<?php
+				if (isset($count))
+				{
+			?>
+					<p class="found">Found <?php echo $count; ?> result(s)</p>
+			<?php
+				}
+				else
+				{
+			?>
+
+					<p class="found">Found 0 result</p>
+			<?php
+				}
+			?>
+				
 				<div class="row">
 		<?php
-				if ($count != 0)
+				if (isset($count) && $count != 0)
 			{
 				$i = 0;
-				while ($data = $result_name->fetch(PDO::FETCH_ASSOC) && $prodinfo = $prod_req->fetch())
+				while ($data = $result_name->fetch(PDO::FETCH_ASSOC))
 				{
 					$i++;
 					
@@ -308,13 +310,13 @@ $tree = buildTree($data);
 						<a class="modal-trigger" href="#modal<?php echo $i ?>">
 							<div class="card small z-depth-3">
 	        			    <div class="card-image">
-	        			    	<img src="<?php echo $prodinfo['imgurl']; ?>"/>
-						<span class="card-title"><?php echo $prodinfo["name"] ;?></span>
+	        			    	<img src="<?php echo $data['imgurl']; ?>"/>
+						<span class="card-title"><?php echo $data["name"] ;?></span>
 							</div>
 			
 							<div class="card-content">
-						<p style="color: black;">Price : <?php echo $prodinfo["price"] ;?>$</p>
-						<p style="color: black;">Category : <?php $catinfo = $cat_req->fetch(); echo $catinfo['name']; ?></p></a>
+						<p style="color: black;">Price : <?php echo $data["price"] ;?>$</p>
+						<p style="color: black;">Category : <?php echo $data['name']; ?></p></a>
 						</div>
 						</a>
 						</div>
@@ -323,23 +325,22 @@ $tree = buildTree($data);
 				<div id="modal<?php echo $i ?>" class="modal">
 	          		<div class="modal-content">
 	          			<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat" style="float: right;">Close</a>
-						<a href="cart.php" class="modal-action modal-close waves-effect waves-green btn" style="float: right;">Add to shopping cart</a>
+						<a href=<?php echo "cart.php?id=" . $data["id"]; ?> class="modal-action modal-close waves-effect waves-green btn" style="float: right;">Add to shopping cart</a>
 
-						<h4><?php echo $prodinfo['price'] ?> $</h4>
+						<h4><?php echo $data['price'] ?> $</h4>
 					</div>
 					<div class="modal-content">
-						<h4><?php echo $prodinfo['name'] ?></h4>
-						<p><?php echo $prodinfo['description'] ?></p>
+						<h4><?php echo $data['name'] ?></h4>
+						<p><?php echo $data['description'] ?></p>
 					</div>
 					<div class="modal-content">
 						<div class="card-image">  
-		              	<img src="<?php echo $prodinfo['imgurl'] ?>"/>
+		              	<img src="<?php echo $data['imgurl'] ?>"/>
 		              </div>
 	        	</div>	
         </div> 
 			<?php
 				}
-			}
 			}
 		 ?>
 </div></div>

@@ -18,7 +18,7 @@ else
 	//var_dump($_SESSION["cart"]);
 }
 
-header("Location: index.php");
+header('Location: ' . $_SERVER['HTTP_REFERER']);
 
 
 //echo arrayToRange($_SESSION["cart"]);
