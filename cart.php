@@ -7,7 +7,7 @@ if (isset($_SESSION["cart"]))
 	//echo "cookie déja crée";
 	array_push($_SESSION["cart"], $_GET["id"]);
 
-	var_dump($_SESSION["cart"]);
+	//var_dump($_SESSION["cart"]);
 }
 else
 {
@@ -15,10 +15,10 @@ else
 	//var_dump($_GET["id"]);
 	$_SESSION["cart"] = array();
 	array_push($_SESSION["cart"], $_GET["id"]);
-	var_dump($_SESSION["cart"]);
+	//var_dump($_SESSION["cart"]);
 }
 
-//header("Location: index.php");
+header("Location: index.php");
 
 
 //echo arrayToRange($_SESSION["cart"]);
