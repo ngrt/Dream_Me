@@ -10,6 +10,10 @@ div {
     display: block;
 }
 
+p {
+	color: #000000;
+}
+
 .search-btn {
 	float: right;
 	color: white;
@@ -44,8 +48,6 @@ div .btn:hover {
 }
 
 body {
-	text-align: center;
-	padding-top: 60%;
 	padding-bottom: 60px;
 }
 .push2 {

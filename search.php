@@ -142,6 +142,7 @@ $tree = buildTree($data);
 	<!--Import Google Icon Font + google font (police for logo)-->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<!-- css local -->
+	<link rel="stylesheet" href="css/search_style.css">
 	<link rel="stylesheet" href="css/index_style.css">
 	
 	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
@@ -237,7 +238,7 @@ $tree = buildTree($data);
 	</div></nav></div>
 	</header>
 <div class="container">
-	<div class="content col2 push2 sheet sheet-page">
+	<div class="content col12 push2 sheet sheet-page" style="margin-top: 5%;">
 <!-- 		<div class="search row"> -->
 		<form method="post" action="search.php">
 			<label>Search</label>
@@ -312,9 +313,9 @@ $tree = buildTree($data);
 							</div>
 			
 							<div class="card-content">
-						<p>Price : <?php echo $prodinfo["price"] ;?>$</p>
-						<p>Category : <?php $catinfo = $cat_req->fetch(); echo $catinfo['name']; ?></p></a>
-							</div>
+						<p style="color: black;">Price : <?php echo $prodinfo["price"] ;?>$</p>
+						<p style="color: black;">Category : <?php $catinfo = $cat_req->fetch(); echo $catinfo['name']; ?></p></a>
+						</div>
 						</a>
 						</div>
 					</div>
