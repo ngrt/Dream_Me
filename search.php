@@ -1,4 +1,6 @@
 <?php
+
+session_start();
 require "bdd_pdo.php";
 
 $sql = "SELECT id, categories.name AS cat_name FROM categories";
@@ -33,15 +35,15 @@ if (isset($_POST["keywords"]))
 		{
 			if ($_POST["price_sort"] == 'high')
 			{ 
-			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " ORDER BY price DESC";
+			$sql = "SELECT products.id AS id, products.name, price, categories.name AS cat_name, imgurl, description FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " ORDER BY price DESC";
 			}
 			else
 			{
-			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " ORDER BY price";
+			$sql = "SELECT products.id AS id, products.name, price, categories.name AS cat_name, imgurl, description FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " ORDER BY price";
 			}
 		}else
 		{
-			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST);
+			$sql = "SELECT products.id AS id, products.name, price, categories.name AS cat_name, imgurl, description FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST);
 		}
 	}else
 	{
@@ -49,15 +51,15 @@ if (isset($_POST["keywords"]))
 		{
 			if ($_POST["price_sort"] == 'high')
 			{
-				$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%' ORDER BY price";
+				$sql = "SELECT products.id AS id, products.name, price, categories.name AS cat_name, imgurl, description FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%' ORDER BY price";
 			}
 			else
 			{
-				$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%' ORDER BY price DESC";
+				$sql = "SELECT products.id AS id, products.name, price, categories.name AS cat_name, imgurl, description FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%' ORDER BY price DESC";
 			}
 		}else
 		{
-			$sql = "SELECT products.name, price, categories.name AS cat_name FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%'";
+			$sql = "SELECT products.id AS id, products.name, price, categories.name AS cat_name, imgurl, description FROM products JOIN categories ON category_id = categories.id WHERE " . sort_category($_POST) . " AND products.name LIKE '%$keywords%'";
 		}
 	}
 
@@ -155,17 +157,66 @@ $tree = buildTree($data);
 </head>
 <body class="search-background">
 	<header>
+
 		<div class="navbar-fixed">
 		<nav>
+
 		<div class="nav-wrapper">
 			<a href="index.php" class="brand-logo">Dream.me</a>
+	<?php 
 
+		function arrayToRange($arr)
+		{
+			$str = "(";
+
+			for ($i=0; $i < count($arr) ; $i++) { 
+				$str .= $arr[$i];
+
+				if ($i == count($arr) - 1)
+				{
+					$str .= ")";
+				}
+				else
+				{
+					$str .= ",";
+				}
+			}
+			return $str;
+		}
+
+		if (isset($_SESSION["cart"]) && count($_SESSION["cart"]) != 0)
+		{
+
+			$sql = "SELECT id, name, price FROM products WHERE id IN " . arrayToRange($_SESSION["cart"]);
+			$itemsInCard = $bdd->query($sql);
+	?>
+
+	<ul id="dropdown2" class="dropdown-content" style="min-width: 250px; margin-top: 5%; padding: 2%">
+	<?php
+		$sum = 0;
+		while ($item = $itemsInCard->fetch()) 
+		{
+	?>
+			<li><?php echo $item['name'] . " " . $item['price'] . "$"; ?><a href=<?php echo "delete-cart.php?id=" . $item['id']; ?>><i class="material-icons">delete</i></a></li>
+	<?php
+		$sum += $item['price'];
+		}
+	
+	 ?>
+	  <li class="divider"></li>
+	  <li><?php echo "Total " . $sum . "$";?></li>
+	  <li><a class="waves-effect waves-light btn" href="#">Order now</a></li>
+	</ul>
+
+	<?php 
+		} 
+	?>
 <!-- MENU NORMAL-->
 		<ul class="right hide-on-med-and-down">
 	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
 		<li><a href="search.php"><i class="material-icons">search</i></a></li>
 	<!-- ICONE CLIQUABLE PANIER-->
-		<li><a href="cart.php"><i class="material-icons">shopping_cart</i></a></li>
+		<li><a class="dropdown-button" href="#!" data-activates="dropdown2"><i class="material-icons">shopping_cart</i></a></li>
 
 		<?php
 		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
@@ -175,6 +226,7 @@ $tree = buildTree($data);
 				$_SESSION["username"] = $_COOKIE["username"];
 			}
 			$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
+
 			$isadmin->execute(array(
 				'username' => $_SESSION["username"]));
 			$res = $isadmin->fetch();
@@ -195,7 +247,10 @@ $tree = buildTree($data);
 			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
 		}
 
-	?></li></ul>
+	?>
+		
+	</li>
+</ul>
 <!-- UTILISATION DE L'ID mobile-demo POUR ACTIVER LE MENU (en dessous du menu normal)-->
 	<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 <!-- DEBUT MENU HAMBURGER MOBILE-->
@@ -203,7 +258,39 @@ $tree = buildTree($data);
 	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
 		<li><a href="search.php"><i class="material-icons">search</i>Search your dream</a></li>
 	<!-- ICONE CLIQUABLE PANIER-->
-		<li><a href="cart.php"><i class="material-icons">shopping_cart</i>Your shopping cart</a></li>
+
+	<?php
+	if (isset($_SESSION["cart"]))
+		{
+
+			$sql = "SELECT id, name, price FROM products WHERE id IN " . arrayToRange($_SESSION["cart"]);
+			//echo $sql;
+			$itemsInCard = $bdd->query($sql);
+	?>
+
+	<ul id="dropdown3" class="dropdown-content" style="min-width: 250px; margin-top: 5%; padding: 2%">
+	<?php
+		$sum = 0;
+		while ($item = $itemsInCard->fetch()) 
+		{
+	?>
+			<li><?php echo $item['name'] . " " . $item['price'] . "$"; ?><a href=<?php echo "delete-cart.php?id=" . $item['id']; ?>><i class="material-icons">delete</i></a></li>
+	<?php
+		$sum += $item['price'];
+		}
+	
+	 ?>
+	  <li class="divider"></li>
+	  <li><?php echo "Total " . $sum . "$";?></li>
+	  <li><a class="waves-effect waves-light btn" href="#">Order now</a></li>
+	</ul>
+
+	<?php 
+		} 
+	?>
+
+
+		<li><a class="dropdown-button" data-activates="dropdown3" href="#"><i class="material-icons">shopping_cart</i>Your shopping cart</a></li>
 
 		<?php
 		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
@@ -233,11 +320,11 @@ $tree = buildTree($data);
 			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
 		}
 		?>
-	</li></ul>
+	</li>
+</ul>
 <!-- FIN MENU HAMBURGER MOBILE-->
 	</div></nav></div>
-	</header>
-<div class="container">
+	</header><div class="container">
 	<div class="content col12 push2 sheet sheet-page" style="margin-top: 5%;">
 <!-- 		<div class="search row"> -->
 		<form method="post" action="search.php">
@@ -277,28 +364,30 @@ $tree = buildTree($data);
 		</form>
 	</div>
 </div>
-	
-		
-		<?php
-			if ($_POST)
-			{
-
-				$request = "SELECT * FROM products";
-				$prod_req = $bdd->query($request);
-
-				$request2 = "SELECT name FROM categories";
-				$cat_req = $bdd->query($request2);
-				
-		?>		
 				
 			<div class="container">
-				<p class="found">Found <?php echo $count; ?> result(s)</p>
+			<?php
+				if (isset($count))
+				{
+			?>
+					<p class="found">Found <?php echo $count; ?> result(s)</p>
+			<?php
+				}
+				else
+				{
+			?>
+
+					<p class="found">Found 0 result</p>
+			<?php
+				}
+			?>
+				
 				<div class="row">
 		<?php
-				if ($count != 0)
+				if (isset($count) && $count != 0)
 			{
 				$i = 0;
-				while ($data = $result_name->fetch(PDO::FETCH_ASSOC) && $prodinfo = $prod_req->fetch())
+				while ($data = $result_name->fetch(PDO::FETCH_ASSOC))
 				{
 					$i++;
 					
@@ -308,13 +397,13 @@ $tree = buildTree($data);
 						<a class="modal-trigger" href="#modal<?php echo $i ?>">
 							<div class="card small z-depth-3">
 	        			    <div class="card-image">
-	        			    	<img src="<?php echo $prodinfo['imgurl']; ?>"/>
-						<span class="card-title"><?php echo $prodinfo["name"] ;?></span>
+	        			    	<img src="<?php echo $data['imgurl']; ?>"/>
+						<span class="card-title"><?php echo $data["name"] ;?></span>
 							</div>
 			
 							<div class="card-content">
-						<p style="color: black;">Price : <?php echo $prodinfo["price"] ;?>$</p>
-						<p style="color: black;">Category : <?php $catinfo = $cat_req->fetch(); echo $catinfo['name']; ?></p></a>
+						<p style="color: black;">Price : <?php echo $data["price"] ;?>$</p>
+						<p style="color: black;">Category : <?php echo $data['name']; ?></p></a>
 						</div>
 						</a>
 						</div>
@@ -323,23 +412,22 @@ $tree = buildTree($data);
 				<div id="modal<?php echo $i ?>" class="modal">
 	          		<div class="modal-content">
 	          			<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat" style="float: right;">Close</a>
-						<a href="cart.php" class="modal-action modal-close waves-effect waves-green btn" style="float: right;">Add to shopping cart</a>
+						<a href=<?php echo "cart.php?id=" . $data["id"]; ?> class="modal-action modal-close waves-effect waves-green btn" style="float: right;">Add to shopping cart</a>
 
-						<h4><?php echo $prodinfo['price'] ?> $</h4>
+						<h4><?php echo $data['price'] ?> $</h4>
 					</div>
 					<div class="modal-content">
-						<h4><?php echo $prodinfo['name'] ?></h4>
-						<p><?php echo $prodinfo['description'] ?></p>
+						<h4><?php echo $data['name'] ?></h4>
+						<p><?php echo $data['description'] ?></p>
 					</div>
 					<div class="modal-content">
 						<div class="card-image">  
-		              	<img src="<?php echo $prodinfo['imgurl'] ?>"/>
+		              	<img src="<?php echo $data['imgurl'] ?>"/>
 		              </div>
 	        	</div>	
         </div> 
 			<?php
 				}
-			}
 			}
 		 ?>
 </div></div>
