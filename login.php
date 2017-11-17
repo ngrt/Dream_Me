@@ -103,6 +103,4 @@ if (isset($_POST["email"]) && isset($_POST["password"]))
 		<a href="./subscription.php" id="new-acc">Create a new account!</a></button>
 	</div>
 </div>
-
-</body>
-</html>
+<?php include_once("footer.php"); ?>

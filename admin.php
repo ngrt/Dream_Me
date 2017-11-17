@@ -99,6 +99,7 @@ $tree = buildTree($data);
 	
 	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/admin_style.css">
+	<link rel="stylesheet" type="text/css" href="css/index_style.css">
 </head>
 <body>
 
@@ -343,7 +344,6 @@ $tree = buildTree($data);
 							<td><a href="modify_product.php?id=<?php echo $data["id"]; ?>">X</a></td>
 							<td><a href="delete_product.php?id=<?php echo $data["id"]; ?>">X</a></td>
 						</tr>
-
 						<?php
 							}
 						?>
@@ -395,5 +395,4 @@ $tree = buildTree($data);
 		</div>
 	</div>
 </div>
-</body>
-</html>
+<?php include_once("footer.php"); ?>

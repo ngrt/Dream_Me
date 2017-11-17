@@ -90,5 +90,7 @@ if ($_POST)
 			</button></div>";
 	?>
 </form>
-</body>
-</html>
+</div>
+</div>
+</div>
+<?php include_once("footer.php"); ?>

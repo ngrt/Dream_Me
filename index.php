@@ -24,174 +24,7 @@ require "bdd_pdo.php";
 	<title>Home - Dream.me</title>
 </head>
 <body>
-	<header>
-
-		<div class="navbar-fixed">
-		<nav>
-
-		<div class="nav-wrapper">
-			<a href="#" class="brand-logo">Dream.me</a>
-	<?php 
-
-		function arrayToRange($arr)
-		{
-			$str = "(";
-
-			for ($i=0; $i < count($arr) ; $i++) { 
-				$str .= $arr[$i];
-
-				if ($i == count($arr) - 1)
-				{
-					$str .= ")";
-				}
-				else
-				{
-					$str .= ",";
-				}
-			}
-			return $str;
-		}
-
-		if (isset($_SESSION["cart"]))
-		{
-
-			$sql = "SELECT name, price FROM products WHERE id IN " . arrayToRange($_SESSION["cart"]);
-			//echo $sql;
-			$itemsInCard = $bdd->query($sql);
-	?>
-
-	<ul id="dropdown2" class="dropdown-content" style="min-width: 250px; margin-top: 5%; padding: 2%">
-	<?php
-		$sum = 0;
-		while ($item = $itemsInCard->fetch()) 
-		{
-	?>
-			<li><?php echo $item['name'] . " " . $item['price'] . "$"; ?></li>
-	<?php
-		$sum += $item['price'];
-		}
-	
-	 ?>
-	  <li class="divider"></li>
-	  <li><?php echo "Total " . $sum . "$";?></li>
-	  <li><a class="waves-effect waves-light btn" href="#">Order now</a></li>
-	</ul>
-
-	<?php 
-		} 
-	?>
-<!-- MENU NORMAL-->
-		<ul class="right hide-on-med-and-down">
-	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
-		<li><a href="search.php"><i class="material-icons">search</i></a></li>
-	<!-- ICONE CLIQUABLE PANIER-->
-		<li><a class="dropdown-button" href="#!" data-activates="dropdown2"><i class="material-icons">shopping_cart</i></a></li>
-
-		<?php
-		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
-		{
-			if (!isset($_SESSION["username"]))
-			{
-				$_SESSION["username"] = $_COOKIE["username"];
-			}
-			$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
-			$isadmin->execute(array(
-				'username' => $_SESSION["username"]));
-			$res = $isadmin->fetch();
-
-		?></li><li><?php
-			if ($res["admin"] == '1')
-			{
-				echo "<a href='./admin.php'>Settings [Admin mode]</a>";
-			}
-		?></li><li><?php
-			echo "<a href='./my_account.php'>My account</a>";
-		?></li><li><?php
-			echo "<a href='./logout.php'>Log out</a>";
-		}
-		else 
-		{
-			?></li><li><?php
-			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
-		}
-
-	?>
-		
-	</li>
-</ul>
-<!-- UTILISATION DE L'ID mobile-demo POUR ACTIVER LE MENU (en dessous du menu normal)-->
-	<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-<!-- DEBUT MENU HAMBURGER MOBILE-->
-		<ul class="side-nav" id="mobile-demo">
-	<!-- ICONE CLIQUABLE SEARCH NAVBAR-->
-		<li><a href="search.php"><i class="material-icons">search</i>Search your dream</a></li>
-	<!-- ICONE CLIQUABLE PANIER-->
-
-	<?php
-	if (isset($_SESSION["cart"]))
-		{
-
-			$sql = "SELECT name, price FROM products WHERE id IN " . arrayToRange($_SESSION["cart"]);
-			//echo $sql;
-			$itemsInCard = $bdd->query($sql);
-	?>
-
-	<ul id="dropdown3" class="dropdown-content" style="min-width: 250px; margin-top: 5%; padding: 2%">
-	<?php
-		$sum = 0;
-		while ($item = $itemsInCard->fetch()) 
-		{
-	?>
-			<li><?php echo $item['name'] . " " . $item['price'] . "$"; ?></li>
-	<?php
-		$sum += $item['price'];
-		}
-	
-	 ?>
-	  <li class="divider"></li>
-	  <li><?php echo "Total " . $sum . "$";?></li>
-	  <li><a class="waves-effect waves-light btn" href="#">Order now</a></li>
-	</ul>
-
-	<?php 
-		} 
-	?>
-
-
-		<li><a class="dropdown-button" data-activates="dropdown3" href="#"><i class="material-icons">shopping_cart</i>Your shopping cart</a></li>
-
-		<?php
-		if (isset($_COOKIE["username"]) || isset($_SESSION["username"]))
-		{
-			if (!isset($_SESSION["username"]))
-			{
-				$_SESSION["username"] = $_COOKIE["username"];
-			}
-			$isadmin = $bdd->prepare("SELECT admin FROM users WHERE username = :username");
-			$isadmin->execute(array(
-				'username' => $_SESSION["username"]));
-			$res = $isadmin->fetch();
-
-		?>><li><?php
-			if ($res["admin"] == '1')
-			{
-				echo "<a href='./admin.php'>Settings [Admin mode]</a>";
-			}
-		?></li><li><?php
-			echo "<a href='./my_account.php'>My account</a>";
-		?></li><li><?php
-			echo "<a href='./logout.php'>Log out</a>";
-		}
-		else 
-		{
-			?></li><li><?php
-			echo "<a href='./login.php' class='waves-effect waves-light btn'>Login</a>";
-		}
-		?>
-	</li></ul>
-<!-- FIN MENU HAMBURGER MOBILE-->
-	</div></nav></div>
-	</header>
+	<?php include_once("header.php"); ?>
  
 <div class="parallax-container">
     <div class="parallax"><img src="img/nebula-img-dream.jpg">
@@ -214,10 +47,10 @@ require "bdd_pdo.php";
 			$i++;
 	?>
 <!-- FAUT FAIRE : REQUETES SUR LES IMAGES STOCKEES DANS IMG SRC-->
-	<div class="row col s12 m6 l4">
+	<div class="row col s12 m6 l4" id="products">
 		<a class="modal-trigger" href="#modal<?php echo $i ?>">
 		<div class="card z-depth-3">
-            <div class="card-image">
+            <div class="card-image products_card-image">
               	<img src="<?php echo $dream['imgurl']; ?>"/>
               	<span class="shadow"></span>
               	<span class="card-title" style="float: left;"><?php echo $dream['name'] ?><p style="position: absolute;right: 15px;bottom: 0;"><?php echo $dream['price'] ?> $</p> </span>
@@ -266,74 +99,10 @@ require "bdd_pdo.php";
 		?>
 		</ul>
 	</div>
-<footer class="page-footer">
-	<div class="container">
-		<div class="row">
-			<div class="col l6 s12">
-                <h5 style="font-family: 'Pacifico', cursive;">Dream.me</h5>
-                <p class="grey-text text-lighten-4">You can finally buy what you can't have in real life. Success, money, love; all you can dream is on our website. Don't waste your night time in shitty dreams. Buy yourself the best, because you deserve it. Dream it!</p>
-            </div>
-            <div class="col l4 offset-l2 s12">
-                <h5 style="font-family: 'Pacifico', cursive;">About us</h5>
-                <p class="grey-text text-lighten-4">Noufel Gouirhate  >  
-                noufel.gouirhate@gmail.com</p>
-					
-				<p class="grey-text text-lighten-4">Catherine Chen  >  
-                catherine.chen@hotmail.fr</p>
-
-                <h5 style="font-family: 'Pacifico', cursive; color: #ffbb33;">Website Dreamed by Cath & Nouf</h5>
-
-        </div>
-	</div>
-</footer>
-	</div>
-</div>
-	<!--Import jQuery before materialize.js-->
-        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-
-        <!-- Compiled and minified JavaScript -->
- 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-          
-        <!--Materializecss Parallax JS script-->
-     	<script>
-     		 $(document).ready(function(){
-      $('.parallax').parallax();
-    });
-        </script>
-
-		<!--Materializecss mobile sidemenu JS script-->
-		<script>
-     		$(".button-collapse").sideNav();
-        </script>
-
-
-        <style>
-        	#sidenav-overlay
-        	{
-        		z-index: -1;
-        	}
-
-        </style>
-        
-		<!-- Materializecss pop-up cards -->
-		<script>
-     		$(document).ready(function(){
-		    // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
-		    $('.modal').modal();
-		    $('.trigger-modal').modal();
-		  });
-        </script>
-        
-
-        <script>
-        	$(document).ready(function()
-        	{
-        	    $('.dropdown-button').dropdown();
-        		{ hover: true }	
-        	});
-
-
-        </script>
-    
-</body>
-</html>
+	<!-- <style>
+		. {
+			height: 274px;
+			background-color: blue;
+		}
+	</style> -->
+<?php include_once("footer.php"); ?>

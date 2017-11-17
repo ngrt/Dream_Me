@@ -1,5 +1,16 @@
+
+.products_card-image {
+	height: 274px;
+	overflow: hidden;
+}
+
 ul.dropdown-content {
 	min-width: 250px;
+}
+
+#sidenav-overlay
+{
+	z-index: -1;
 }
 
 .card .card-image img {
@@ -11,11 +22,6 @@ ul.dropdown-content {
 
 .card .card-image .card-title {
 	width: 100%;
-}
-
-.card-image {
-	height: 274px;
-	overflow: hidden;
 }
 
 .card.small {
@@ -96,7 +102,7 @@ nav a {
 }
 
 img {
-	max-width:auto
+	max-width: 100%;
 }
 
 .pagination {
